@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Rayane Yajjou — Portfolio",
   description:
-    "Rayane Yajjou — engineering student at École Centrale Casablanca, seeking a final-year (PFE) internship. Mathematics, machine learning, physics, software.",
+    "Rayane Yajjou — engineering student at École Centrale Casablanca, seeking a final-year internship (PFE). Mathematics, machine learning, physics, software.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

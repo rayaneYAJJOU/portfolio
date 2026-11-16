@@ -40,8 +40,10 @@ export const content = {
     skills: [
       "Programmation (C, Python, Lua)",
       "Développement web",
+      "Développmeent logiciel",
       "Développement jeux-vidéo",
-      "Machine Learning",
+      "Machine Learning & AI",
+      "Science des données"
     ],
     languages: [
       { lang: "Français", level: "Compétences professionnelles" },
@@ -57,13 +59,13 @@ export const content = {
           title: "Amendis Tétouan",
           period: "Avril 2025 – Août 2025",
           body: "J'ai d'abord travaillé sur la manipulation et la gestion de fichiers .prn relatifs aux relevés techniques du réseau. Par la suite, j'ai analysé et croisé des données issues des systèmes SCADA et GMAO (VAMS) afin de développer des indicateurs de performance (KPIs) destinés à optimiser la maintenance préventive et à améliorer l'efficacité des stations de pompage.",
-          skills: ["Python"],
+          skills: ["Python", "Développement logiciel", "Système de contrôle et d'acquisition des données (SCADA)"],
         },
         {
           title: "3D SMART Factory",
           period: "Août 2024 – Septembre 2024",
           body: "J'ai développé des algorithmes de segmentation sémantique appliqués aux images médicales 3D et analysé des données médicales afin d'améliorer la précision de la segmentation des structures anatomiques.",
-          skills: ["Machine Learning", "Deep Learning", "Python"],
+          skills: ["Machine Learning", "Deep Learning", "Vision par ordinateur", "Python"],
         },
       ],
     },
@@ -72,13 +74,13 @@ export const content = {
       items: [
         {
           title: "École Centrale Casablanca",
-          period: "Septembre 2023 – Juin 2026",
+          period: "2023 – 2027",
           body: "Trois années du cycle ingénieur centralien.",
-          skills: ["Mathématiques", "Physique", "Machine Learning", "Python", "R"],
+          skills: ["Mathématiques", "Physique", "Machine Learning", "Deep Learning", "Développement web", "Développement logiciel", "Programmation orientée objet", "Réseaux Télécoms", "Cybersécurité", "Python", "R"],
         },
         {
           title: "CPGE Lycée Moulay Youssef",
-          period: "Septembre 2021 – Juin 2023",
+          period: "2021 – 2023",
           body: "Deux années de classes préparatoires aux concours d'entrée aux Grandes Écoles d'Ingénieur en France et au Maroc.",
           skills: ["Mathématiques", "Physique", "Python", "SQL"],
         },
@@ -95,12 +97,12 @@ export const content = {
         {
           title: "Projet Scientifique",
           body: "J'ai créé un modèle de machine learning dans le contexte de la maintenance prédictive, en utilisant la théorie du transport optimal pour trouver un seuil qui détermine l'état d'une machine.",
-          skills: ["Mathématiques", "Python"],
+          skills: ["Mathématiques", "Python", "Transport optimal"],
         },
         {
           title: "Projet Learning by Doing",
           body: "J'ai développé un modèle d'apprentissage automatique visant à évaluer le niveau de compétence des étudiants, ainsi qu'un site web servant d'interface graphique pour les différents cas d'utilisation.",
-          skills: ["Machine Learning", "Python", "JavaScript", "React", "Développement web"],
+          skills: ["Machine Learning", "Python", "JavaScript", "TypeScript", "React", "Développement web"],
         },
         {
           title: "Projet Formation Expérimentale",
@@ -112,6 +114,11 @@ export const content = {
           body: "J'ai participé à un événement au cours duquel j'ai développé un modèle d'apprentissage automatique (arbre de décision) pour détecter les cas de fraude dans les transactions bancaires. Cet exercice m'a permis d'acquérir une compréhension pratique des concepts fondamentaux de l'apprentissage automatique.",
           skills: ["Machine Learning", "Python"],
         },
+        {
+          title: "Projet à enjeux",
+          body: "J'ai conçu un simulateur d'évacuation réaliste intégrant des comportements d'agents avancés et des contraintes environnementales afin d'améliorer la résilience des infrastructures. Grâce à l'intelligence artificielle et au Machine Learning, j'ai optimisé les itinéraires en temps réel et créé un outil prédictif des temps d'évacuation, permettant ainsi de réduire la congestion aux sorties.",
+          skills: ["Machine Learning", "Modélisation multi-agent", "Python"]
+        }
       ],
     },
     extra: {
@@ -130,11 +137,11 @@ export const content = {
       services: [
         {
           title: "Développement web",
-          body: "Sites vitrines, applications web sur mesure, tableaux de bord — du prototype rapide à l'interface soignée.",
+          body: "Sites vitrines, applications web sur mesure, tableaux de bord...",
         },
         {
           title: "Machine Learning & données",
-          body: "Modèles prédictifs, analyse de données, automatisation d'indicateurs — de l'exploration au modèle déployé.",
+          body: "Modèles prédictifs, analyse de données, automatisation d'indicateurs...",
         },
       ],
       cta: "Discuter d'un projet",
@@ -146,7 +153,7 @@ export const content = {
   },
   en: {
     name: "Rayane Yajjou",
-    tagline: "Engineering student looking for a final-year (PFE) internship",
+    tagline: "Engineering student looking for a final-year internship (PFE)",
     nav: {
       profile: "Profile",
       experience: "Experience",
@@ -172,8 +179,10 @@ export const content = {
     skills: [
       "Programming (C, Python, Lua)",
       "Web development",
+      "Software development",
       "Video game development",
-      "Machine Learning",
+      "Machine Learning & AI",
+      "Data Science"
     ],
     languages: [
       { lang: "French", level: "Professional working proficiency" },
@@ -189,13 +198,13 @@ export const content = {
           title: "Amendis Tétouan",
           period: "Apr 2025 – Aug 2025",
           body: "I started by handling and processing .prn files containing technical network readings. I then analyzed and cross-referenced data from the SCADA and CMMS (VAMS) systems to build performance indicators (KPIs) aimed at optimizing preventive maintenance and improving pumping station efficiency.",
-          skills: ["Python"],
+          skills: ["Python", "Software development"],
         },
         {
           title: "3D SMART Factory",
           period: "Aug 2024 – Sep 2024",
           body: "I developed semantic segmentation algorithms for 3D medical imaging and analyzed medical data to improve the accuracy of anatomical structure segmentation.",
-          skills: ["Machine Learning", "Deep Learning", "Python"],
+          skills: ["Machine Learning", "Deep Learning", "Computer Vision", "Python"],
         },
       ],
     },
@@ -204,13 +213,13 @@ export const content = {
       items: [
         {
           title: "École Centrale Casablanca",
-          period: "Sep 2023 – Jun 2026",
+          period: "2023 – 2027",
           body: "Three years of the Centralien engineering program.",
-          skills: ["Mathematics", "Physics", "Machine Learning", "Python", "R"],
+          skills: ["Mathematics", "Physics", "Machine Learning", "Deep Learning", "Web Development", "Software Development", "OOP", "Networking", "Cybersecurity", "Python", "R"],
         },
         {
           title: "CPGE Lycée Moulay Youssef",
-          period: "Sep 2021 – Jun 2023",
+          period: "2021 – 2023",
           body: "Two years of preparatory classes for entrance exams to Grandes Écoles d'Ingénieurs in France and Morocco.",
           skills: ["Mathematics", "Physics", "Python", "SQL"],
         },
@@ -227,12 +236,12 @@ export const content = {
         {
           title: "Scientific Project",
           body: "I built a machine learning model for predictive maintenance, using optimal transport theory to find a threshold that determines a machine's health state.",
-          skills: ["Mathematics", "Python"],
+          skills: ["Mathematics", "Python", "Optimal Transport"],
         },
         {
           title: "Learning by Doing Project",
           body: "I developed a machine learning model to assess students' skill level, along with a website serving as the graphical interface for the different use cases.",
-          skills: ["Machine Learning", "Python", "JavaScript", "React", "Web development"],
+          skills: ["Machine Learning", "Python", "JavaScript", "TypeScript", "React", "Web Development"],
         },
         {
           title: "Experimental Training Project",
@@ -244,6 +253,11 @@ export const content = {
           body: "I took part in an event where I built a machine learning model (decision tree) to detect fraud in banking transactions — a hands-on introduction to core machine learning concepts.",
           skills: ["Machine Learning", "Python"],
         },
+        {
+          title: "Real-World Challenge Project",
+          body: "I built a physically realistic evacuation simulator integrating advanced agent behaviors and environmental constraints to enhance infrastructure resilience. Using AI and Machine Learning, I optimized routes in real time and created a predictive tool for evacuation times, effectively reducing exit congestion.",
+          skills: ["Machine Learning", "Agent Based Modeling", "Python"]
+        }
       ],
     },
     extra: {
@@ -262,18 +276,18 @@ export const content = {
       services: [
         {
           title: "Web development",
-          body: "Landing pages, custom web apps, dashboards — from a quick prototype to a polished interface.",
+          body: "Landing pages, custom web apps, dashboards...",
         },
         {
           title: "Machine learning & data",
-          body: "Predictive models, data analysis, KPI automation — from exploration to a deployed model.",
+          body: "Predictive models, data analysis, KPI automation...",
         },
       ],
       cta: "Discuss a project",
     },
     footer: {
       heading: "Contact",
-      body: "Open to final-year (PFE) internship opportunities — feel free to reach out.",
+      body: "Open to final-year internship (PFE) opportunities, feel free to reach out.",
     },
   },
 } satisfies Record<Lang, unknown>;

@@ -160,7 +160,7 @@ export default function Home() {
           {t.projects.items.map((item, i) => (
             <Entry key={item.title} {...item} skillsLabel={t.labels.skillsUsed} delay={i * 30} />
           ))}
-          <p className="repoNote">
+          {/*<p className="repoNote">
             {t.labels.moreRepos}:{" "}
             <a href="https://github.com/rayaneYAJJOU/2d-game-engine" target="_blank" rel="noreferrer">
               2d-game-engine
@@ -173,7 +173,7 @@ export default function Home() {
             <a href={contact.github} target="_blank" rel="noreferrer">
               {t.labels.viewOnGithub}
             </a>
-          </p>
+          </p>*/}
         </section>
 
         <section className="section">

@@ -31,3 +31,9 @@
 .adm .langToggle { display: inline-flex; border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
 .adm .langToggle button { background: none; border: none; color: var(--text-muted); font-family: var(--font-mono); font-size: 12px; padding: 5px 12px; cursor: pointer; }
 .adm .langToggle button[data-active="true"] { background: var(--accent); color: var(--bg); }
+
+.adm .prov { border: 1px solid var(--line-soft); border-radius: 3px; padding: 12px; display: flex; flex-direction: column; gap: 10px; background: var(--bg); }
+.adm .radio { display: inline-flex; gap: 8px; align-items: center; font-size: 15px; }
+.adm .radio input { width: auto; accent-color: var(--accent); }
+.adm select { background: var(--bg); border: 1px solid var(--line); border-radius: 3px; color: var(--text); font-family: var(--font-mono); font-size: 12.5px; padding: 6px 8px; }
+.adm .hint a { color: var(--accent); }

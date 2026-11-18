@@ -13,14 +13,16 @@ Le site est statique : il n'y a pas de comptes. Être « propriétaire » veut d
 GitHub**. L'interface cachée aux visiteurs n'est qu'un confort ; la vraie barrière est que, sans ce jeton, personne
 ne peut écrire dans ton dépôt, et sans ta clé, personne n'utilise ton IA. Le code des outils est public mais ne contient aucun secret.
 
-## Activation (une fois par appareil)
+## Activation (une fois par navigateur)
 
 1. **Jeton GitHub** : GitHub → Settings → Developer settings → Fine-grained tokens → *Generate*. Repository access :
    *Only select repositories* → ton portfolio. Permissions : **Contents : Read and write**. Expiration : 90 jours.
-2. **Clé Anthropic** (facultatif) : console Anthropic → nouvelle clé **dédiée**, avec une limite de dépense mensuelle.
-3. Ouvre `/admin/`, saisis `proprietaire/nom-du-depot`, la branche (`main`), le jeton, la clé, puis « Vérifier et se connecter ».
-   Le modèle par défaut est `claude-sonnet-5-5` : modifiable si ton compte en propose un autre.
-4. N'active ce mode que sur tes appareils. « Se déconnecter » efface jeton et clé du navigateur.
+2. Ouvre `/admin/` : dépôt (`proprietaire/nom`), branche, jeton, et une **phrase secrète** (8 caractères minimum, à toi seul).
+   Jeton et clés sont chiffrés avec elle (AES-GCM, clé dérivée par PBKDF2) avant d'être gardés dans ce navigateur.
+3. Dans « Fournisseurs d'IA », coche ceux que tu veux, colle leurs clés, « Enregistrer les clés », « Tester ».
+4. À chaque nouvelle ouverture du site (onglet fermé ou page rechargée), le coffre est **verrouillé** : saisis ta phrase secrète
+   (invite sur `/admin/` ou en haut de `/cv/`). Les liens internes du site gardent la session ouverte ; un rechargement la ferme.
+   Phrase oubliée : « Effacer ce navigateur », puis recrée jeton et clés (rien n'est perdu côté site).
 
 ## Éditer et publier
 
@@ -39,15 +41,29 @@ ne peut écrire dans ton dépôt, et sans ta clé, personne n'utilise ton IA. Le
 - **Capture d'écran** : colle une image (Ctrl+V) dans le champ de l'offre ou utilise « Importer une capture » :
   le modèle transcrit le texte (post LinkedIn, message, affiche).
 
-## Assistant IA (dans `/cv/`)
+## Assistant IA multi-fournisseurs (dans `/cv/`)
 
-- **Reformuler pour cette offre** : résumé et puces réécrits, appliqués à l'aperçu et aux exports. Un **garde-fou** compare le
-  résultat à ton profil et signale tout outil absent, tout chiffre nouveau et tout passage « À COMPLÉTER ». Annulable.
-- **Que dois-je améliorer ?** : analyse ton profil et les offres enregistrées (radar) et rend forces, faiblesses par entrée avec la
-  question précise à te poser, plan d'apprentissage priorisé, améliorations du portfolio/GitHub, actions de la semaine.
-- Les appels partent de ton navigateur vers l'API Anthropic avec ta clé ; ils sont facturés sur ton compte.
+Fournisseurs pris en charge : Google Gemini, Groq, OpenRouter, Mistral, Anthropic (Claude), OpenAI (API). Tu peux en activer plusieurs.
+
+- **Automatique** : l'ordre de `/admin/` est suivi (gratuits d'abord par défaut). Quand un fournisseur répond « quota/limite/crédit épuisé »
+  (ou refuse la clé, ou tombe), il est **mis en pause** (durée du `Retry-After` si fourni, sinon 5 min ; 6 h si crédit épuisé ; 24 h si clé refusée)
+  et le suivant est essayé. Il est réessayé tout seul après la pause ; « Réinitialiser les pauses » force.
+- **Manuel** : tu choisis un fournisseur (liste dans `/cv/` ou `/admin/`) ; il est utilisé jusqu'à sa limite, avec un message clair, puis tu en choisis un autre.
+- Les **images** (capture d'offre) ne partent que vers les fournisseurs qui les lisent (Gemini, Claude, OpenAI).
+- **Reformuler pour cette offre** et **Que dois-je améliorer ?** utilisent ce mécanisme. Le garde-fou signale tout outil absent de ton profil,
+  tout chiffre nouveau et tout « À COMPLÉTER » ; il vaut pour tous les fournisseurs. Le dernier fournisseur utilisé et les pauses sont affichés.
+
+À savoir : les noms de modèles et les quotas gratuits changent souvent (corrige les modèles dans `/admin/`, vérifie les quotas chez chaque fournisseur) ;
+un **abonnement ChatGPT n'est pas une clé API** et ne donne pas de crédits API ; certains niveaux gratuits peuvent utiliser les données envoyées pour
+améliorer leurs modèles, donc n'y envoie que ce que tu acceptes (ton CV et des offres publiques).
 
 ## Sécurité, en bref
 
-Jeton et clé sont dans le `localStorage` de ton navigateur : ne les mets jamais dans le dépôt, utilise un jeton limité à ce
-dépôt et une clé avec plafond, révoque-les si tu perds un appareil. Les offres enregistrées et le radar restent aussi dans ce navigateur.
+- **Rien de secret dans le site publié** : ni dans le HTML, ni dans le JavaScript, ni dans le dépôt (vérifié par un scan du site généré). Les appels IA
+  partent de ton navigateur vers le fournisseur, avec la clé déchiffrée en mémoire seulement.
+- Sur disque, jeton et clés n'existent que **chiffrés**. Sans ta phrase secrète, le contenu du navigateur ne les révèle pas.
+- Ce que cela **ne** protège **pas** : un navigateur compromis (extension malveillante, malware) pendant que le coffre est déverrouillé. Garde peu
+  d'extensions, ne déverrouille que sur tes appareils, et verrouille ou ferme l'onglet après usage.
+- Réduis les dégâts possibles : jeton limité à ce dépôt et expirant, clés dédiées à cet usage avec plafond de dépense quand le fournisseur le permet.
+  Si un doute apparaît, **révoque** la clé ou le jeton chez le fournisseur : c'est immédiat.
+- Offres enregistrées, radar et conseils restent dans ce navigateur (en clair, ce ne sont pas des secrets).

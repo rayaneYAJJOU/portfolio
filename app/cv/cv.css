@@ -119,3 +119,6 @@
 .cvTool .warn ul { margin: 6px 0 0; padding-left: 18px; }
 .cvTool .advice { white-space: pre-wrap; font-size: 15px; line-height: 1.5; border: 1px solid var(--line-soft); border-radius: 3px; padding: 12px; max-height: 420px; overflow: auto; }
 .cvTool .ai { border-top: 1px solid var(--line); padding-top: 16px; }
+
+.cvTool .unlock input { background: var(--bg-raised); border: 1px solid var(--line); border-radius: 3px; color: var(--text); font-family: var(--font-mono); font-size: 13px; padding: 8px 10px; }
+.cvTool select { background: var(--bg-raised); border: 1px solid var(--line); border-radius: 3px; color: var(--text); font-family: var(--font-mono); font-size: 12.5px; padding: 8px; width: 100%; }

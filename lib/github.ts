@@ -1,9 +1,11 @@
-import type { OwnerSettings } from "./owner";
+import type { Owner } from "./owner";
+
+type Repo = Pick<Owner, "repo" | "branch" | "ghToken">;
 
 // Persistance : un commit sur ton dépôt via l'API GitHub (jeton fin, limité à ce dépôt).
 // Le workflow GitHub Pages republie ensuite le site tout seul.
 
-const api = (s: OwnerSettings, path: string, init: RequestInit = {}) =>
+const api = (s: Repo, path: string, init: RequestInit = {}) =>
   fetch(`https://api.github.com/repos/${s.repo}${path}`, {
     ...init,
     headers: {
@@ -28,7 +30,7 @@ async function fail(r: Response, what: string): Promise<never> {
 }
 
 /** Vérifie que le jeton atteint le dépôt ET a le droit d'y écrire. */
-export async function ghVerify(s: OwnerSettings): Promise<string> {
+export async function ghVerify(s: Repo): Promise<string> {
   const r = await api(s, "");
   if (!r.ok) return fail(r, "Dépôt inaccessible avec ce jeton");
   const j = await r.json();
@@ -36,7 +38,7 @@ export async function ghVerify(s: OwnerSettings): Promise<string> {
   return j.full_name as string;
 }
 
-export async function ghPutFile(s: OwnerSettings, path: string, text: string, message: string): Promise<string> {
+export async function ghPutFile(s: Repo, path: string, text: string, message: string): Promise<string> {
   let sha: string | undefined;
   const get = await api(s, `/contents/${path}?ref=${encodeURIComponent(s.branch)}`);
   if (get.ok) sha = (await get.json()).sha;

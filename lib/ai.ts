@@ -1,30 +1,12 @@
 import { cvToText } from "./cvText";
-import type { Data, OwnerSettings } from "./owner";
+import type { Data, Owner } from "./owner";
+import { ask, type Req } from "./providers";
 import type { CV, Report } from "./tailor";
 
-// Appels directs à l'API Anthropic depuis TON navigateur, avec ta clé (stockée localement, jamais publiée).
-// Conseil : crée une clé dédiée avec une limite de dépense dans la console Anthropic.
+// Les appels passent par lib/providers.ts : fournisseur choisi, ou bascule automatique quand un quota est épuisé.
+// Les clés ne sont jamais dans le code : elles sont déverrouillées en mémoire par ta phrase secrète.
 
-export const DEFAULT_MODEL = "claude-sonnet-5-5";
-
-type Block = { type: "text"; text: string } | { type: "image"; source: { type: "base64"; media_type: string; data: string } };
-
-async function ask(s: OwnerSettings, system: string, content: Block[], maxTokens = 2000): Promise<string> {
-  if (!s.aiKey) throw new Error("Aucune clé IA : ajoute-la dans /admin/.");
-  const r = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      "x-api-key": s.aiKey,
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-access": "true",
-    },
-    body: JSON.stringify({ model: s.model || DEFAULT_MODEL, max_tokens: maxTokens, system, messages: [{ role: "user", content }] }),
-  });
-  const j: { content?: { type: string; text?: string }[]; error?: { message?: string } } = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error(j.error?.message ?? `Erreur API (${r.status})`);
-  return (j.content ?? []).filter((b) => b.type === "text").map((b) => b.text ?? "").join("\n").trim();
-}
+const run = async (o: Owner, r: Req) => (await ask(o, r)).text;
 
 const RULES = `Règles impératives : n'invente AUCUN outil, résultat, chiffre, durée, responsabilité ni compétence. Tout doit être défendable en entretien technique. Si un chiffre améliorerait une phrase mais n'est pas fourni, écris [À COMPLÉTER : quel chiffre] au lieu de l'inventer.`;
 
@@ -38,14 +20,12 @@ function json<T>(text: string): T {
 
 export type Rewrite = { summary: string; bullets: Record<string, string[]>; notes: string };
 
-export async function aiRewrite(s: OwnerSettings, cv: CV, jd: string, report: Report): Promise<Rewrite> {
+export async function aiRewrite(o: Owner, cv: CV, jd: string, report: Report): Promise<Rewrite> {
   const entries = [...cv.experience, ...cv.projects, ...cv.extra].map((e) => ({ id: e.id, titre: e.heading, puces: e.bullets }));
-  const out = await ask(
-    s,
-    `Tu es un conseiller en recrutement pour étudiants ingénieurs. ${RULES} Réponds uniquement par un objet JSON, sans texte autour.`,
-    [{
-      type: "text",
-      text: `Langue de sortie : ${cv.lang === "fr" ? "français" : "anglais"}.
+  const out = await run(o, {
+    system: `Tu es un conseiller en recrutement pour étudiants ingénieurs. ${RULES} Réponds uniquement par un objet JSON, sans texte autour.`,
+    maxTokens: 2500,
+    text: `Langue de sortie : ${cv.lang === "fr" ? "français" : "anglais"}.
 Reformule pour cette offre : (1) le résumé (3 phrases max), (2) les puces de chaque entrée (même nombre ou moins, même ordre, verbe d'action + contexte + résultat, vocabulaire de l'offre quand il est vrai pour moi).
 Format : {"summary": "...", "bullets": {"<id>": ["...", "..."]}, "notes": "ce que tu as changé et pourquoi, 3 lignes max"}
 
@@ -56,9 +36,7 @@ ${jd}
 
 RÉSUMÉ ACTUEL : ${cv.summary}
 ENTRÉES : ${JSON.stringify(entries)}`,
-    }],
-    2500,
-  );
+  });
   const r = json<Rewrite>(out);
   return { summary: String(r.summary ?? ""), bullets: r.bullets ?? {}, notes: String(r.notes ?? "") };
 }
@@ -67,7 +45,7 @@ ENTRÉES : ${JSON.stringify(entries)}`,
 
 export type OfferMemo = { label: string; date: string; missing: { key: string; weight: number }[]; text?: string; url?: string };
 
-export async function aiAdvise(s: OwnerSettings, data: Data, offers: OfferMemo[], labelOf: (k: string) => string): Promise<string> {
+export async function aiAdvise(o: Owner, data: Data, offers: OfferMemo[], labelOf: (k: string) => string): Promise<string> {
   const p = data.fr;
   const compact = {
     cible: p.availability,
@@ -80,12 +58,10 @@ export async function aiAdvise(s: OwnerSettings, data: Data, offers: OfferMemo[]
     ecarts: o.missing.slice(0, 12).map((m) => labelOf(m.key)),
     extrait: (o.text ?? "").slice(0, 1200),
   }));
-  return ask(
-    s,
-    `Tu es un mentor de carrière pour un étudiant ingénieur (ML/data/logiciel) qui cherche un stage de fin d'études. ${RULES} Sois concret, priorise, et pose des questions précises quand il manque un fait. Réponds en français, en Markdown simple (titres ##, listes).`,
-    [{
-      type: "text",
-      text: `Voici mon profil actuel et les offres que j'ai enregistrées avec leurs écarts.
+  return run(o, {
+    maxTokens: 3000,
+    system: `Tu es un mentor de carrière pour un étudiant ingénieur (ML/data/logiciel) qui cherche un stage de fin d'études. ${RULES} Sois concret, priorise, et pose des questions précises quand il manque un fait. Réponds en français, en Markdown simple (titres ##, listes).`,
+    text: `Voici mon profil actuel et les offres que j'ai enregistrées avec leurs écarts.
 Produis :
 ## Points forts à mettre en avant
 ## Faiblesses concrètes du profil/CV (par entrée : ce qui manque, et la question précise à laquelle je dois répondre pour le corriger, ex. volume de données, métrique, comparaison)
@@ -95,23 +71,18 @@ Produis :
 
 PROFIL : ${JSON.stringify(compact)}
 OFFRES ENREGISTRÉES (${memos.length}) : ${JSON.stringify(memos)}`,
-    }],
-    3000,
-  );
+  });
 }
 
 // ───────── 3. Capture d'écran / photo d'une offre → texte ─────────
 
-export async function aiExtractOffer(s: OwnerSettings, mediaType: string, base64: string): Promise<string> {
-  return ask(
-    s,
-    "Tu transcris fidèlement des offres d'emploi ou de stage à partir d'images. Réponds uniquement par le texte de l'offre (titre, entreprise, missions, profil, avantages), sans commentaire.",
-    [
-      { type: "image", source: { type: "base64", media_type: mediaType, data: base64 } },
-      { type: "text", text: "Transcris le texte complet de l'offre visible sur cette image." },
-    ],
-    2500,
-  );
+export async function aiExtractOffer(o: Owner, mediaType: string, base64: string): Promise<string> {
+  return run(o, {
+    system: "Tu transcris fidèlement des offres d'emploi ou de stage à partir d'images. Réponds uniquement par le texte de l'offre (titre, entreprise, missions, profil, avantages), sans commentaire.",
+    text: "Transcris le texte complet de l'offre visible sur cette image.",
+    image: { mediaType, data: base64 },
+    maxTokens: 2500,
+  });
 }
 
 export const cvForPrompt = cvToText;

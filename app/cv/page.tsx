@@ -6,6 +6,8 @@ import { useHash, useHydrated, useSearch } from "../../lib/clientEnv";
 import { KEYS, notify, useLocal, useProfile, writeStore } from "../../lib/owner";
 import { aiAdvise, aiExtractOffer, aiRewrite, type OfferMemo } from "../../lib/ai";
 import { checkRewrite } from "../../lib/guard";
+import { META, useAiStatus, useNow } from "../../lib/providers";
+import { unlockVault, useVault } from "../../lib/vault";
 import type { Lang } from "../content";
 import { cleanRole, detectLang, fitProjects, tailor, type CV, type CVEntry } from "../../lib/tailor";
 import { cvToText } from "../../lib/cvText";
@@ -31,6 +33,22 @@ function decodeImport(hash: string): { x: string; t?: string; u?: string } | nul
   } catch {
     return null;
   }
+}
+
+function UnlockBar() {
+  const [pass, setPass] = useState("");
+  const [err, setErr] = useState("");
+  const go = async () => {
+    setErr("");
+    try { await unlockVault(pass); } catch (e) { setErr(e instanceof Error ? e.message : String(e)); }
+  };
+  return (
+    <div className="panel viewBar unlock">
+      <input type="password" placeholder="Phrase secrète" value={pass} onChange={(e) => setPass(e.target.value)} onKeyDown={(e) => e.key === "Enter" && go()} aria-label="Phrase secrète" />
+      <button className="cta" onClick={go} disabled={!pass}>Déverrouiller</button>
+      {err ? <span className="hint small">{err}</span> : null}
+    </div>
+  );
 }
 
 const fileToBase64 = (f: File) =>
@@ -143,6 +161,9 @@ export default function CvPage() {
   const [aiIssues, setAiIssues] = useState<string[]>([]);
   const { owner, data } = useProfile();
   const hash = useHash();
+  const { state: vaultState } = useVault();
+  const aiStatus = useAiStatus();
+  const now = useNow();
   const hydrated = useHydrated();
   const advice = useLocal(KEYS.advice);
 
@@ -168,11 +189,11 @@ export default function CvPage() {
 
   // Offre envoyée par le favori : on la mémorise (propriétaire seulement) puis on efface l'URL.
   useEffect(() => {
-    if (!hydrated || !hash.startsWith("#import=")) return;
+    if (!hydrated || vaultState === "locked" || !hash.startsWith("#import=")) return; // verrouillé : on garde l'offre jusqu'au déverrouillage
     if (owner && imp) writeStore(STORE, JSON.stringify({ jd: imp.x, company: "", role: null, source: imp.u, title: imp.t }));
     window.history.replaceState(null, "", window.location.pathname + window.location.search);
     notify();
-  }, [hydrated, hash, imp, owner]);
+  }, [hydrated, vaultState, hash, imp, owner]);
 
   const detected = useMemo(() => detectLang(jd), [jd]);
   const effLang: Lang = langEdit ?? urlLang ?? detected ?? "fr";
@@ -260,6 +281,14 @@ export default function CvPage() {
     try { await job(); } catch (e) { setAiError(e instanceof Error ? e.message : String(e)); } finally { setAiBusy(""); }
   };
 
+  const hasAi = !!owner && Object.values(owner.keys).some(Boolean);
+  const pickProvider = (v: string) => {
+    if (!owner) return;
+    const { ghToken, keys, ...settings } = owner;
+    void ghToken; void keys;
+    writeStore(KEYS.owner, JSON.stringify(v === "auto" ? { ...settings, mode: "auto" } : { ...settings, mode: "manual", selected: v }));
+  };
+
   const doRewrite = () =>
     owner && runAi("rewrite", async () => {
       const r = await aiRewrite(owner, cv, jd, report);
@@ -295,6 +324,7 @@ export default function CvPage() {
   if (viewOnly || !owner) {
     return (
       <div className="cvTool viewOnly">
+        {vaultState === "locked" ? <UnlockBar /> : null}
         <div className="panel viewBar">
           {langToggle}
           <button className="cta" onClick={printPdf}>PDF</button>
@@ -380,11 +410,25 @@ export default function CvPage() {
 
         <section className="report ai">
           <h2>Assistant IA</h2>
-          {!owner.aiKey ? <p className="hint small">Ajoute une clé API dans <Link href="/admin/">/admin/</Link> pour activer l&apos;assistant.</p> : null}
+          {!hasAi ? <p className="hint small">Ajoute au moins une clé d&apos;IA dans <Link href="/admin/">/admin/</Link> pour activer l&apos;assistant.</p> : (
+            <>
+              <label className="field">
+                <span>Fournisseur</span>
+                <select value={owner.mode === "auto" ? "auto" : owner.selected} onChange={(e) => pickProvider(e.target.value)}>
+                  <option value="auto">Automatique : ordre de /admin/, bascule à l&apos;épuisement</option>
+                  {owner.providers.filter((c) => owner.keys[c.id]).map((c) => <option key={c.id} value={c.id}>{META[c.id].label}</option>)}
+                </select>
+              </label>
+              <p className="hint small">
+                {aiStatus.last ? `Dernière réponse : ${META[aiStatus.last.id].label} · ${aiStatus.last.model}. ` : ""}
+                {owner.providers.filter((c) => c.enabled && owner.keys[c.id] && (aiStatus.cool[c.id]?.until ?? 0) > now).map((c) => `${META[c.id].label} en pause (${aiStatus.cool[c.id]!.reason}). `).join("")}
+              </p>
+            </>
+          )}
           <div className="actions">
-            <button className="cta ghost" onClick={doRewrite} disabled={!owner.aiKey || !jd.trim() || !!aiBusy}>{aiBusy === "rewrite" ? "Réécriture…" : "Reformuler pour cette offre"}</button>
+            <button className="cta ghost" onClick={doRewrite} disabled={!hasAi || !jd.trim() || !!aiBusy}>{aiBusy === "rewrite" ? "Réécriture…" : "Reformuler pour cette offre"}</button>
             {overrides ? <button className="cta ghost" onClick={undoRewrite}>Annuler la réécriture</button> : null}
-            <button className="cta ghost" onClick={doAdvise} disabled={!owner.aiKey || !!aiBusy}>{aiBusy === "advise" ? "Analyse…" : "Que dois-je améliorer ?"}</button>
+            <button className="cta ghost" onClick={doAdvise} disabled={!hasAi || !!aiBusy}>{aiBusy === "advise" ? "Analyse…" : "Que dois-je améliorer ?"}</button>
           </div>
           {aiError ? <p className="warn">{aiError}</p> : null}
           {aiNotes ? <p className="hint small">{aiNotes}</p> : null}

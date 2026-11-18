@@ -1,61 +1,52 @@
 "use client";
-import { useMemo, useSyncExternalStore } from "react";
+import { useMemo } from "react";
 import { content, type Lang, type Profile } from "../app/content";
+import { PROVIDERS, type ProviderId } from "./providerMeta";
+import { KEYS, parseJson, useLocal } from "./store";
+import { useVault } from "./vault";
 
-// Mode propriétaire = un jeton GitHub (et, en option, une clé IA) présents dans CE navigateur.
-// Rien de tout cela n'est dans le code publié : un visiteur n'a ni jeton ni clé, donc aucun pouvoir.
+export { KEYS, notify, useLocal, writeStore } from "./store";
 
-export type OwnerSettings = { repo: string; branch: string; ghToken: string; aiKey: string; model: string };
 export type Data = Record<Lang, Profile>;
 
-export const KEYS = {
-  owner: "owner:v1",
-  draft: "profile:draft:v1",
-  cv: "cv-tailor:v1",
-  offers: "cv-tailor:offers:v1",
-  advice: "advice:v1",
-} as const;
+export type ProviderCfg = { id: ProviderId; model: string; enabled: boolean };
+/** Réglages non secrets, stockés en clair. */
+export type Settings = { repo: string; branch: string; mode: "auto" | "manual"; selected: ProviderId; providers: ProviderCfg[] };
+/** Propriétaire déverrouillé : réglages + secrets (en mémoire seulement). */
+export type Owner = Settings & { ghToken: string; keys: Record<string, string> };
 
-const EVT = "local-store-change";
+export const defaultSettings = (repo = "", branch = "main"): Settings => ({
+  repo,
+  branch,
+  mode: "auto",
+  selected: PROVIDERS[0].id,
+  providers: PROVIDERS.map((p) => ({ id: p.id, model: p.defaultModel, enabled: false })),
+});
 
-const read = (key: string) => {
-  try { return localStorage.getItem(key) ?? ""; } catch { return ""; }
-};
-const subscribe = (cb: () => void) => {
-  window.addEventListener(EVT, cb);
-  window.addEventListener("storage", cb);
-  return () => { window.removeEventListener(EVT, cb); window.removeEventListener("storage", cb); };
-};
-
-export const notify = () => window.dispatchEvent(new Event(EVT));
-
-/** Écrit (ou supprime si null) puis notifie tous les composants de l'onglet. */
-export function writeStore(key: string, value: string | null) {
-  try {
-    if (value === null) localStorage.removeItem(key);
-    else localStorage.setItem(key, value);
-  } catch {}
-  window.dispatchEvent(new Event(EVT));
+/** Complète d'éventuels fournisseurs manquants (nouvelles versions). */
+function normalize(s: Settings): Settings {
+  const have = new Set(s.providers.map((p) => p.id));
+  const extra = PROVIDERS.filter((p) => !have.has(p.id)).map((p) => ({ id: p.id, model: p.defaultModel, enabled: false }));
+  return { ...s, providers: [...s.providers, ...extra] };
 }
 
-/** Valeur brute d'une clé localStorage ("" côté serveur et pendant l'hydratation). */
-export const useLocal = (key: string) => useSyncExternalStore(subscribe, () => read(key), () => "");
-
-const parse = <T,>(raw: string): T | null => {
-  try { return raw ? (JSON.parse(raw) as T) : null; } catch { return null; }
-};
-
-export function useOwner(): OwnerSettings | null {
+export function useSettings(): Settings | null {
   const raw = useLocal(KEYS.owner);
   return useMemo(() => {
-    const s = parse<OwnerSettings>(raw);
-    return s?.ghToken && s.repo ? s : null;
+    const s = parseJson<Settings>(raw);
+    return s ? normalize(s) : null;
   }, [raw]);
+}
+
+export function useOwner(): Owner | null {
+  const settings = useSettings();
+  const { state, secrets } = useVault();
+  return useMemo(() => (state === "unlocked" && settings && secrets ? { ...settings, ghToken: secrets.ghToken, keys: secrets.keys } : null), [state, settings, secrets]);
 }
 
 export function useDraft(): Data | null {
   const raw = useLocal(KEYS.draft);
-  return useMemo(() => parse<Data>(raw), [raw]);
+  return useMemo(() => parseJson<Data>(raw), [raw]);
 }
 
 /** Profil à afficher : le publié pour tout le monde ; le brouillon en plus pour le propriétaire. */

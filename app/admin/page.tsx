@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { content, type Entry, type Lang } from "../content";
-import { DEFAULT_MODEL } from "../../lib/ai";
 import { ghPutFile, ghVerify } from "../../lib/github";
-import { KEYS, useDraft, useOwner, writeStore, type Data, type OwnerSettings } from "../../lib/owner";
+import { KEYS, defaultSettings, useDraft, useOwner, writeStore, type Data, type Owner } from "../../lib/owner";
+import { META, testProvider, resetStatus, useAiStatus, useNow } from "../../lib/providers";
+import { createVault, lockVault, unlockVault, updateSecrets, useVault, wipeVault } from "../../lib/vault";
 import { validateProfile } from "../../lib/schema";
 import "./admin.css";
 
@@ -42,22 +43,24 @@ function List({ label, value, onCommit, mode }: { label: string; value: string[]
   );
 }
 
-// ───────── connexion ─────────
+// ───────── première configuration / déverrouillage ─────────
 
-function Login() {
-  const [f, setF] = useState({ repo: "", branch: "main", ghToken: "", aiKey: "", model: DEFAULT_MODEL });
+function Setup() {
+  const [f, setF] = useState({ repo: "", branch: "main", pass: "", pass2: "", ghToken: "" });
   const [msg, setMsg] = useState("");
   const [busy, setBusy] = useState(false);
   const set = (k: keyof typeof f) => (v: string) => setF((x) => ({ ...x, [k]: v }));
 
   const submit = async () => {
-    setBusy(true);
     setMsg("");
+    if (f.pass.length < 8) return setMsg("Phrase secrète : 8 caractères minimum.");
+    if (f.pass !== f.pass2) return setMsg("Les deux phrases secrètes diffèrent.");
+    setBusy(true);
     try {
       const repo = f.repo.trim() || guessRepo();
-      const s: OwnerSettings = { ...f, repo };
-      const name = await ghVerify(s);
-      writeStore(KEYS.owner, JSON.stringify({ ...s, repo: name }));
+      const name = await ghVerify({ repo, branch: f.branch, ghToken: f.ghToken });
+      await createVault(f.pass, { ghToken: f.ghToken, keys: {} });
+      writeStore(KEYS.owner, JSON.stringify(defaultSettings(name, f.branch)));
     } catch (e) {
       setMsg(e instanceof Error ? e.message : String(e));
     } finally {
@@ -70,8 +73,9 @@ function Login() {
       <Link href="/" className="back">← Portfolio</Link>
       <h1>Accès propriétaire</h1>
       <p className="hint">
-        Les visiteurs n&apos;ont accès qu&apos;au portfolio et au CV en lecture. Ici, tu te connectes avec un <strong>jeton GitHub</strong> limité à ce
-        dépôt : il reste dans ce navigateur, n&apos;est jamais publié, et c&apos;est lui (pas ce formulaire) qui autorise les modifications.
+        Les visiteurs n&apos;ont accès qu&apos;au portfolio et au CV en lecture. Ici, tu relies ce navigateur à ton dépôt avec un <strong>jeton GitHub</strong>.
+        Jeton et clés d&apos;IA sont <strong>chiffrés</strong> par ta phrase secrète avant d&apos;être gardés dans ce navigateur : ils ne sont jamais dans le
+        HTML, le code ni le dépôt, et ne sont lisibles qu&apos;une fois l&apos;onglet déverrouillé.
       </p>
       <Text label="Dépôt (propriétaire/nom)" value={f.repo} onChange={set("repo")} />
       <Text label="Branche" value={f.branch} onChange={set("branch")} />
@@ -79,13 +83,36 @@ function Login() {
         <span>Jeton GitHub (fine-grained, Contents : Read and write, ce dépôt uniquement)</span>
         <input type="password" autoComplete="off" value={f.ghToken} onChange={(e) => set("ghToken")(e.target.value)} />
       </label>
-      <label className="f">
-        <span>Clé API Anthropic (optionnelle : assistant IA). Utilise une clé dédiée avec limite de dépense.</span>
-        <input type="password" autoComplete="off" value={f.aiKey} onChange={(e) => set("aiKey")(e.target.value)} />
-      </label>
-      <Text label="Modèle" value={f.model} onChange={set("model")} />
+      <div className="two">
+        <label className="f"><span>Phrase secrète (à toi seul, non récupérable)</span><input type="password" autoComplete="new-password" value={f.pass} onChange={(e) => set("pass")(e.target.value)} /></label>
+        <label className="f"><span>Confirmer</span><input type="password" autoComplete="new-password" value={f.pass2} onChange={(e) => set("pass2")(e.target.value)} /></label>
+      </div>
       <div className="row">
-        <button className="cta" onClick={submit} disabled={busy || !f.ghToken}>Vérifier et se connecter</button>
+        <button className="cta" onClick={submit} disabled={busy || !f.ghToken || !f.pass}>{busy ? "Vérification…" : "Vérifier et enregistrer"}</button>
+      </div>
+      {msg ? <p className="warn">{msg}</p> : null}
+    </div>
+  );
+}
+
+function Unlock() {
+  const [pass, setPass] = useState("");
+  const [msg, setMsg] = useState("");
+  const [busy, setBusy] = useState(false);
+  const go = async () => {
+    setBusy(true);
+    setMsg("");
+    try { await unlockVault(pass); } catch (e) { setMsg(e instanceof Error ? e.message : String(e)); } finally { setBusy(false); }
+  };
+  return (
+    <div className="adm">
+      <Link href="/" className="back">← Portfolio</Link>
+      <h1>Déverrouiller</h1>
+      <p className="hint">Saisis ta phrase secrète pour déchiffrer ton jeton et tes clés dans cet onglet. Fermer ou recharger l&apos;onglet reverrouille.</p>
+      <label className="f"><span>Phrase secrète</span><input type="password" autoFocus value={pass} onChange={(e) => setPass(e.target.value)} onKeyDown={(e) => e.key === "Enter" && go()} /></label>
+      <div className="row">
+        <button className="cta" onClick={go} disabled={busy || !pass}>Déverrouiller</button>
+        <button className="cta ghost danger" onClick={() => window.confirm("Effacer le coffre, les clés et les réglages de CE navigateur ?") && wipeVault()}>Phrase oubliée : effacer ce navigateur</button>
       </div>
       {msg ? <p className="warn">{msg}</p> : null}
     </div>
@@ -98,6 +125,103 @@ function guessRepo(): string {
   const user = host.split(".")[0];
   const base = (process.env.NEXT_PUBLIC_BASE_PATH ?? "").replace(/^\//, "");
   return `${user}/${base || `${user}.github.io`}`;
+}
+
+// ───────── fournisseurs d'IA ─────────
+
+function Providers({ owner }: { owner: Owner }) {
+  const status = useAiStatus();
+  const now = useNow();
+  const [newKeys, setNewKeys] = useState<Record<string, string>>({});
+  const [tests, setTests] = useState<Record<string, string>>({});
+  const [msg, setMsg] = useState("");
+  const { ghToken, keys, ...settings } = owner;
+  void ghToken; void keys;
+  const save = (patch: Partial<typeof settings>) => writeStore(KEYS.owner, JSON.stringify({ ...settings, ...patch }));
+  const patchCfg = (i: number, p: Partial<(typeof settings.providers)[number]>) => save({ providers: settings.providers.map((c, j) => (j === i ? { ...c, ...p } : c)) });
+  const move = (i: number, d: -1 | 1) => {
+    const a = [...settings.providers];
+    [a[i], a[i + d]] = [a[i + d], a[i]];
+    save({ providers: a });
+  };
+
+  const saveKeys = async () => {
+    const merged = { ...owner.keys };
+    for (const [id, v] of Object.entries(newKeys)) if (v.trim()) merged[id] = v.trim();
+    await updateSecrets({ ghToken: owner.ghToken, keys: merged });
+    setNewKeys({});
+    setMsg("Clés chiffrées et enregistrées.");
+  };
+  const removeKey = async (id: string) => {
+    const merged = { ...owner.keys };
+    delete merged[id];
+    await updateSecrets({ ghToken: owner.ghToken, keys: merged });
+  };
+  const test = async (id: (typeof settings.providers)[number]["id"]) => {
+    setTests((t) => ({ ...t, [id]: "…" }));
+    try {
+      const r = await testProvider(owner, id);
+      setTests((t) => ({ ...t, [id]: `OK (${r.model})` }));
+    } catch (e) {
+      setTests((t) => ({ ...t, [id]: e instanceof Error ? e.message.slice(0, 160) : String(e) }));
+    }
+  };
+
+  return (
+    <section className="card">
+      <h2>Fournisseurs d&apos;IA</h2>
+      <p className="hint small">
+        Coche ceux que tu veux utiliser et colle leur clé (chiffrée à l&apos;enregistrement). <strong>Automatique</strong> : l&apos;ordre ci-dessous est suivi
+        et, dès qu&apos;un quota est épuisé, le suivant prend le relais (le fournisseur épuisé est mis en pause puis réessayé plus tard).
+        <strong> Manuel</strong> : un seul fournisseur, jusqu&apos;à sa limite, puis tu en choisis un autre. Les noms de modèles changent : corrige-les ici au besoin.
+      </p>
+      <div className="row">
+        <label className="radio"><input type="radio" checked={owner.mode === "auto"} onChange={() => save({ mode: "auto" })} /> Automatique (bascule à l&apos;épuisement)</label>
+        <label className="radio"><input type="radio" checked={owner.mode === "manual"} onChange={() => save({ mode: "manual" })} /> Manuel</label>
+        {owner.mode === "manual" ? (
+          <select value={owner.selected} onChange={(e) => save({ selected: e.target.value as typeof owner.selected })}>
+            {settings.providers.map((c) => <option key={c.id} value={c.id}>{META[c.id].label}</option>)}
+          </select>
+        ) : null}
+      </div>
+
+      {settings.providers.map((c, i) => {
+        const m = META[c.id];
+        const cool = status.cool[c.id];
+        const paused = !!cool && cool.until > now;
+        return (
+          <div className="prov" key={c.id}>
+            <div className="row spread">
+              <label className="radio"><input type="checkbox" checked={c.enabled} onChange={(e) => patchCfg(i, { enabled: e.target.checked })} /> <strong>{m.label}</strong>{m.vision ? <span className="muted"> · images</span> : null}</label>
+              <span className="muted">
+                {owner.keys[c.id] ? (paused ? `pause : ${cool.reason}, jusqu'à ${new Date(cool.until).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}` : "prêt") : "sans clé"}
+              </span>
+            </div>
+            <p className="hint small">{m.note} <a href={m.keyUrl} target="_blank" rel="noreferrer">Obtenir une clé</a></p>
+            <div className="two">
+              <Text label="Modèle" value={c.model} onChange={(v) => patchCfg(i, { model: v })} />
+              <label className="f">
+                <span>Clé API {owner.keys[c.id] ? "(enregistrée : laisser vide pour la garder)" : ""}</span>
+                <input type="password" autoComplete="off" value={newKeys[c.id] ?? ""} placeholder={owner.keys[c.id] ? "••••••••••••" : "coller la clé"} onChange={(e) => setNewKeys((k) => ({ ...k, [c.id]: e.target.value }))} />
+              </label>
+            </div>
+            <div className="row">
+              <button className="cta ghost" disabled={i === 0} onClick={() => move(i, -1)}>↑</button>
+              <button className="cta ghost" disabled={i === settings.providers.length - 1} onClick={() => move(i, 1)}>↓</button>
+              <button className="cta ghost" disabled={!owner.keys[c.id]} onClick={() => test(c.id)}>Tester</button>
+              {owner.keys[c.id] ? <button className="cta ghost danger" onClick={() => removeKey(c.id)}>Retirer la clé</button> : null}
+              {tests[c.id] ? <span className="muted">{tests[c.id]}</span> : null}
+            </div>
+          </div>
+        );
+      })}
+      <div className="row">
+        <button className="cta" onClick={saveKeys} disabled={!Object.values(newKeys).some((v) => v.trim())}>Enregistrer les clés</button>
+        <button className="cta ghost" onClick={resetStatus}>Réinitialiser les pauses</button>
+      </div>
+      {msg ? <p className="ok">{msg}</p> : null}
+    </section>
+  );
 }
 
 // ───────── bookmarklet ─────────
@@ -183,7 +307,7 @@ function EntryEditor({ e, i, n, lang, sec, upd }: { e: Entry; i: number; n: numb
   );
 }
 
-function Editor({ owner }: { owner: OwnerSettings }) {
+function Editor({ owner }: { owner: Owner }) {
   const draft = useDraft();
   const data: Data = draft ?? content;
   const [lang, setLang] = useState<Lang>("fr");
@@ -297,20 +421,28 @@ function Editor({ owner }: { owner: OwnerSettings }) {
 
 export default function AdminPage() {
   const owner = useOwner();
-  if (!owner) return <Login />;
+  const { state } = useVault();
+  useEffect(() => {
+    // anciennes versions : jeton en clair → supprimé
+    try { localStorage.removeItem("owner:v1"); } catch {}
+  }, []);
+  if (state === "none") return <Setup />;
+  if (state === "locked" || !owner) return <Unlock />;
   return (
     <div className="adm">
       <div className="row spread">
         <div>
           <Link href="/" className="back">← Portfolio</Link>
           <h1>Mode propriétaire</h1>
-          <p className="hint small">
-            {owner.repo} ({owner.branch}) · IA : {owner.aiKey ? owner.model : "non configurée"}
-          </p>
+          <p className="hint small">{owner.repo} ({owner.branch}) · coffre déverrouillé dans cet onglet</p>
         </div>
-        <button className="cta ghost" onClick={() => writeStore(KEYS.owner, null)}>Se déconnecter</button>
+        <div className="row">
+          <button className="cta ghost" onClick={lockVault}>Verrouiller</button>
+          <button className="cta ghost danger" onClick={() => window.confirm("Effacer coffre, clés et réglages de ce navigateur ?") && wipeVault()}>Effacer ce navigateur</button>
+        </div>
       </div>
       <Editor owner={owner} />
+      <Providers owner={owner} />
       <Capture />
     </div>
   );

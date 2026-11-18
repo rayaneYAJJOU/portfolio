@@ -34,5 +34,6 @@ Push sur `main` : le workflow `.github/workflows/deploy.yml` construit et publie
 | `lib/tailor.ts` | Analyse de l'offre, scoring, sélection des projets/puces |
 | `lib/taxonomy.ts` | Compétences reconnues (FR/EN) |
 | `lib/docxExport.ts` | Export DOCX compatible ATS |
-| `lib/ai.ts`, `lib/guard.ts` | Assistant IA (clé locale) et garde-fou anti-invention |
+| `lib/ai.ts`, `lib/providers.ts`, `lib/guard.ts` | Assistant IA multi-fournisseurs avec bascule, garde-fou anti-invention |
+| `lib/vault.ts` | Coffre chiffré (jeton et clés), déverrouillé en mémoire |
 | `lib/github.ts`, `lib/owner.ts` | Publication par commit et mode propriétaire |

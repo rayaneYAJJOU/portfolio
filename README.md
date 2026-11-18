@@ -5,7 +5,8 @@ avec un **générateur de CV adapté à chaque offre** (`/cv/`).
 
 - Portfolio : `?lang=fr` / `?lang=en` dans l'URL, sinon langue du navigateur.
 - CV : `/cv/?view` affiche le CV prêt à exporter (PDF/DOCX) ; `/cv/` est l'outil d'adaptation à une offre.
-- Tout le contenu (FR + EN) est dans `app/content.ts`. Mode d'emploi : [`docs/TAILORING.md`](docs/TAILORING.md).
+- Tout le contenu (FR + EN) est dans `data/profile.json`, modifiable depuis le site en mode propriétaire (`/admin/`).
+- Mode d'emploi : [`docs/OWNER.md`](docs/OWNER.md) (accès propriétaire, publication, IA, import d'offres) et [`docs/TAILORING.md`](docs/TAILORING.md) (adapter le CV).
 
 ## Développer
 
@@ -25,9 +26,13 @@ Push sur `main` : le workflow `.github/workflows/deploy.yml` construit et publie
 
 | Chemin | Rôle |
 | --- | --- |
-| `app/content.ts` | Source de vérité du profil (portfolio + CV) |
+| `data/profile.json` | Source de vérité du profil FR/EN (portfolio + CV), éditée via `/admin/` |
+| `app/content.ts` | Types du profil et coordonnées |
+| `app/admin/` | Éditeur et publication (propriétaire) |
 | `app/page.tsx` | Portfolio |
 | `app/cv/` | Outil CV (aperçu A4, rapport de correspondance, export) |
 | `lib/tailor.ts` | Analyse de l'offre, scoring, sélection des projets/puces |
 | `lib/taxonomy.ts` | Compétences reconnues (FR/EN) |
 | `lib/docxExport.ts` | Export DOCX compatible ATS |
+| `lib/ai.ts`, `lib/guard.ts` | Assistant IA (clé locale) et garde-fou anti-invention |
+| `lib/github.ts`, `lib/owner.ts` | Publication par commit et mode propriétaire |

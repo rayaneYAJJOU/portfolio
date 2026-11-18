@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useNavigatorLang, useSearch } from "../lib/clientEnv";
-import { content, contact, type Entry as EntryData, type Lang } from "./content";
+import { contact, type Entry as EntryData, type Lang } from "./content";
+import { useProfile } from "../lib/owner";
 
 function Entry({
   title,
@@ -53,7 +54,8 @@ export default function Home() {
   const navLang = useNavigatorLang();
   const lang: Lang =
     choice ?? (urlLang === "fr" || urlLang === "en" ? urlLang : navLang.toLowerCase().startsWith("fr") ? "fr" : "en");
-  const t = content[lang];
+  const { data, owner, isDraft } = useProfile(); // le brouillon n'est visible que par le propriétaire
+  const t = data[lang];
 
   useEffect(() => {
     document.documentElement.lang = lang;
@@ -258,6 +260,14 @@ export default function Home() {
           <p className="finePrint">Kénitra, Morocco</p>
         </section>
       </main>
+
+      {owner ? (
+        <div className="ownerBar" role="region" aria-label="Mode propriétaire">
+          <span>Mode propriétaire{isDraft ? " · brouillon affiché" : ""}</span>
+          <Link href="/admin/">Éditer</Link>
+          <Link href="/cv/">Outil CV</Link>
+        </div>
+      ) : null}
     </div>
   );
 }

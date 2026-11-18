@@ -1,4 +1,4 @@
-import { content, contact, type Entry, type Lang } from "../app/content";
+import { content, contact, type Entry, type Lang, type Profile } from "../app/content";
 import { labelFor, normalize, scan, stripKnown } from "./taxonomy";
 
 // ───────────────────────── Types ─────────────────────────
@@ -13,6 +13,10 @@ export type TailorOptions = {
   educationFirst?: boolean;
   customSummary?: string;
   customHeadline?: string;
+  /** Profil à utiliser (brouillon de l'éditeur) ; par défaut le profil publié. */
+  data?: Record<Lang, Profile>;
+  /** Puces réécrites (ex. par le modèle), par id d'entrée : remplacent les puces du profil. */
+  bulletOverrides?: Record<string, string[]>;
 };
 
 export type Term = { key: string; label: string; weight: number; count: number; owned: boolean };
@@ -139,8 +143,7 @@ function entryText(e: Entry): string {
   return [e.title, e.role, e.context, ...e.skills, ...e.bullets].filter(Boolean).join("\n");
 }
 
-function ownedKeys(lang: Lang): Set<string> {
-  const p = content[lang];
+export function ownedKeys(p: Profile): Set<string> {
   const all = [
     ...p.skillGroups.flatMap((g) => g.items),
     ...p.languages.map((l) => l.lang),
@@ -163,14 +166,14 @@ function entryScore(e: Entry, keyWeights: Map<string, number>): number {
 
 export function tailor(opts: TailorOptions): Result {
   const { lang } = opts;
-  const p = content[lang];
+  const p = (opts.data ?? content)[lang];
   const L = LABELS_CV[lang];
   const colon = lang === "fr" ? " :" : ":";
   const maxProjects = opts.maxProjects ?? 4;
   const maxProjectBullets = opts.maxProjectBullets ?? 2;
 
   const jobWeights = analyzeJob(opts.jd, opts.targetRole);
-  const owned = ownedKeys(lang);
+  const owned = ownedKeys(p);
   const keyWeights = new Map([...jobWeights].map(([k, v]) => [k, v.weight]));
   const hasJob = jobWeights.size > 0;
 
@@ -188,7 +191,7 @@ export function tailor(opts: TailorOptions): Result {
     heading: e.title,
     subheading: [e.role, e.place].filter(Boolean).join(" – ") || e.context,
     period: e.period,
-    bullets: pickBullets(e.bullets, keyWeights, maxBullets),
+    bullets: opts.bulletOverrides?.[e.id] ?? pickBullets(e.bullets, keyWeights, maxBullets),
     score: entryScore(e, keyWeights),
   });
 

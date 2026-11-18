@@ -535,3 +535,23 @@ button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* barre visible uniquement pour le propriétaire connecté */
+.ownerBar {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 50;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 8px 14px;
+  background: var(--bg-raised);
+  border: 1px solid var(--accent-dim);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.ownerBar a { color: var(--accent); text-decoration: none; }
+@media print { .ownerBar { display: none; } }

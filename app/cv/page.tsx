@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { useSearch, useStored } from "../../lib/clientEnv";
+import { useHash, useHydrated, useSearch } from "../../lib/clientEnv";
+import { KEYS, notify, useLocal, useProfile, writeStore } from "../../lib/owner";
+import { aiAdvise, aiExtractOffer, aiRewrite, type OfferMemo } from "../../lib/ai";
+import { checkRewrite } from "../../lib/guard";
 import type { Lang } from "../content";
 import { cleanRole, detectLang, fitProjects, tailor, type CV, type CVEntry } from "../../lib/tailor";
 import { cvToText } from "../../lib/cvText";
@@ -12,10 +15,31 @@ import { labelFor } from "../../lib/taxonomy";
 import { SAMPLES } from "../../lib/samples";
 import "./cv.css";
 
-const STORE = "cv-tailor:v1";
-const OFFERS = "cv-tailor:offers:v1";
+const STORE = KEYS.cv;
+const OFFERS = KEYS.offers;
 
-type SavedOffer = { id: string; date: string; label: string; coverage: number | null; missing: { key: string; weight: number }[] };
+type SavedOffer = { id: string; date: string; label: string; coverage: number | null; missing: { key: string; weight: number }[]; text?: string; url?: string };
+
+// Import depuis le favori : #import=<base64url(JSON {x: texte, t: titre, u: url})>
+function decodeImport(hash: string): { x: string; t?: string; u?: string } | null {
+  if (!hash.startsWith("#import=")) return null;
+  try {
+    const b = hash.slice(8).replace(/-/g, "+").replace(/_/g, "/");
+    const bin = atob(b + "=".repeat((4 - (b.length % 4)) % 4));
+    const o = JSON.parse(new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0))));
+    return typeof o.x === "string" ? o : null;
+  } catch {
+    return null;
+  }
+}
+
+const fileToBase64 = (f: File) =>
+  new Promise<string>((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(String(r.result).split(",")[1] ?? "");
+    r.onerror = () => rej(new Error("Lecture du fichier impossible"));
+    r.readAsDataURL(f);
+  });
 
 function Entries({ list }: { list: CVEntry[] }) {
   return (
@@ -112,27 +136,43 @@ export default function CvPage() {
   const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState(false);
   const [copiedPrompt, setCopiedPrompt] = useState(false);
-  const [, bump] = useState(0); // relance le rendu après écriture dans localStorage
+  const [overrides, setOverrides] = useState<Record<string, string[]> | undefined>(undefined);
+  const [aiBusy, setAiBusy] = useState<"" | "rewrite" | "advise" | "image">("");
+  const [aiError, setAiError] = useState("");
+  const [aiNotes, setAiNotes] = useState("");
+  const [aiIssues, setAiIssues] = useState<string[]>([]);
+  const { owner, data } = useProfile();
+  const hash = useHash();
+  const hydrated = useHydrated();
+  const advice = useLocal(KEYS.advice);
 
   const q = useMemo(() => new URLSearchParams(search), [search]);
-  const viewOnly = q.has("view");
+  const viewOnly = q.has("view") || !owner; // les visiteurs n'ont que la vue lecture
   const urlLang = q.get("lang") === "fr" || q.get("lang") === "en" ? (q.get("lang") as Lang) : null;
-  const savedRaw = useStored(STORE);
+  const savedRaw = useLocal(STORE);
   const saved = useMemo(() => {
-    try { return JSON.parse(savedRaw || "{}") as { jd?: string; company?: string; role?: string | null }; } catch { return {}; }
+    try { return JSON.parse(savedRaw || "{}") as { jd?: string; company?: string; role?: string | null; source?: string; title?: string }; } catch { return {}; }
   }, [savedRaw]);
 
-  const jd = viewOnly ? "" : (jdEdit ?? saved.jd ?? "");
+  const imp = useMemo(() => decodeImport(hash), [hash]);
+  const jd = viewOnly ? "" : (jdEdit ?? imp?.x ?? saved.jd ?? "");
+  const source = jdEdit === null ? (imp?.u ?? saved.source) : undefined;
   const company = viewOnly ? "" : (companyEdit ?? saved.company ?? "");
   const role = roleEdit ?? saved.role ?? null; // null = déduit de l'offre
 
   useEffect(() => {
     // N'écrit qu'après une saisie : le premier rendu (avant lecture du stockage) ne doit pas écraser la sauvegarde.
     if (viewOnly || (jdEdit === null && companyEdit === null && roleEdit === null)) return;
-    try {
-      localStorage.setItem(STORE, JSON.stringify({ jd, company, role }));
-    } catch {}
-  }, [viewOnly, jdEdit, companyEdit, roleEdit, jd, company, role]);
+    writeStore(STORE, JSON.stringify({ jd, company, role, source }));
+  }, [viewOnly, jdEdit, companyEdit, roleEdit, jd, company, role, source]);
+
+  // Offre envoyée par le favori : on la mémorise (propriétaire seulement) puis on efface l'URL.
+  useEffect(() => {
+    if (!hydrated || !hash.startsWith("#import=")) return;
+    if (owner && imp) writeStore(STORE, JSON.stringify({ jd: imp.x, company: "", role: null, source: imp.u, title: imp.t }));
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    notify();
+  }, [hydrated, hash, imp, owner]);
 
   const detected = useMemo(() => detectLang(jd), [jd]);
   const effLang: Lang = langEdit ?? urlLang ?? detected ?? "fr";
@@ -140,14 +180,14 @@ export default function CvPage() {
   const effRole = role ?? (firstLine.length <= 80 ? cleanRole(firstLine) : "");
 
   const base = useMemo(
-    () => ({ lang: effLang, jd, targetRole: effRole, company, educationFirst, customSummary }),
-    [effLang, jd, effRole, company, educationFirst, customSummary],
+    () => ({ lang: effLang, jd, targetRole: effRole, company, educationFirst, customSummary, data, bulletOverrides: overrides }),
+    [effLang, jd, effRole, company, educationFirst, customSummary, data, overrides],
   );
   const autoProjects = useMemo(() => fitProjects(base), [base]);
   const maxProjects = maxEdit ?? autoProjects;
   const { cv, report } = useMemo(() => tailor({ ...base, maxProjects }), [base, maxProjects]);
 
-  const offersRaw = useStored(OFFERS);
+  const offersRaw = useLocal(OFFERS);
   const offers = useMemo<SavedOffer[]>(() => {
     try { return JSON.parse(offersRaw || "[]"); } catch { return []; }
   }, [offersRaw]);
@@ -163,14 +203,13 @@ export default function CvPage() {
   }, [offers]);
 
   const writeOffers = (list: SavedOffer[]) => {
-    try { localStorage.setItem(OFFERS, JSON.stringify(list)); } catch {}
-    bump((n) => n + 1);
+    writeStore(OFFERS, JSON.stringify(list));
   };
   const saveOffer = () => {
     const label = [company, effRole].filter(Boolean).join(" – ") || firstLine.slice(0, 60) || "Offre";
     writeOffers([
       ...offers.filter((o) => o.label !== label),
-      { id: String(Date.now()), date: new Date().toISOString().slice(0, 10), label, coverage: report.coverage, missing: report.missing.map((t) => ({ key: t.key, weight: t.weight })) },
+      { id: String(Date.now()), date: new Date().toISOString().slice(0, 10), label, coverage: report.coverage, missing: report.missing.map((t) => ({ key: t.key, weight: t.weight })), text: jd.slice(0, 4000), url: source },
     ]);
   };
 
@@ -215,6 +254,34 @@ export default function CvPage() {
     } catch {}
   };
 
+  const runAi = async (kind: "rewrite" | "advise" | "image", job: () => Promise<void>) => {
+    setAiBusy(kind);
+    setAiError("");
+    try { await job(); } catch (e) { setAiError(e instanceof Error ? e.message : String(e)); } finally { setAiBusy(""); }
+  };
+
+  const doRewrite = () =>
+    owner && runAi("rewrite", async () => {
+      const r = await aiRewrite(owner, cv, jd, report);
+      setCustomSummary(r.summary);
+      setOverrides(r.bullets);
+      setAiNotes(r.notes);
+      setAiIssues(checkRewrite([r.summary, ...Object.values(r.bullets).flat()], data, effLang));
+    });
+
+  const undoRewrite = () => { setOverrides(undefined); setCustomSummary(""); setAiNotes(""); setAiIssues([]); };
+
+  const doAdvise = () =>
+    owner && runAi("advise", async () => {
+      const memos: OfferMemo[] = offers.map((o) => ({ label: o.label, date: o.date, missing: o.missing, text: o.text, url: o.url }));
+      writeStore(KEYS.advice, await aiAdvise(owner, data, memos, (k) => labelFor(k, "fr")));
+    });
+
+  const doImage = (file: File) =>
+    owner && runAi("image", async () => {
+      setJd(await aiExtractOffer(owner, file.type || "image/png", await fileToBase64(file)));
+    });
+
   const langToggle = (
     <div className="langToggle" role="group" aria-label="Langue du CV">
       {(["fr", "en"] as Lang[]).map((l) => (
@@ -225,7 +292,7 @@ export default function CvPage() {
     </div>
   );
 
-  if (viewOnly) {
+  if (viewOnly || !owner) {
     return (
       <div className="cvTool viewOnly">
         <div className="panel viewBar">
@@ -247,18 +314,29 @@ export default function CvPage() {
         <h1>CV adapté à une offre</h1>
         <p className="hint">
           Colle l&apos;offre : le CV réordonne et met en avant ce qui, dans ton profil réel, correspond au poste.
-          Rien n&apos;est inventé : une compétence absente de <code>app/content.ts</code> n&apos;est jamais ajoutée.
+          Rien n&apos;est inventé : une compétence absente de ton profil (<Link href="/admin/">/admin/</Link>) n&apos;est jamais ajoutée.
         </p>
 
         <label className="field">
-          <span>Offre d&apos;emploi (texte complet)</span>
-          <textarea value={jd} onChange={(e) => setJd(e.target.value)} rows={10} placeholder="Colle ici la description du poste, missions et profil recherché inclus…" />
+          <span>Offre d&apos;emploi{aiBusy === "image" ? " : lecture de la capture…" : ""}</span>
+          <textarea
+            value={jd}
+            onChange={(e) => setJd(e.target.value)}
+            onPaste={(e) => {
+              const img = [...e.clipboardData.files].find((f) => f.type.startsWith("image/"));
+              if (img) { e.preventDefault(); doImage(img); }
+            }}
+            rows={10}
+            placeholder="Colle le texte de l'offre (ou une capture d'écran : Ctrl+V), ou utilise le favori « → Mon CV » depuis n'importe quel site."
+          />
         </label>
         <div className="sampleRow">
           <button onClick={() => setJd(SAMPLES.fr_data)}>Exemple FR</button>
           <button onClick={() => setJd(SAMPLES.en_swe)}>Exemple EN</button>
           <button onClick={() => { setJd(""); setRole(null); setCompany(""); }}>Vider</button>
+          <label className="fileBtn">Importer une capture<input type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) doImage(f); e.target.value = ""; }} /></label>
         </div>
+        {source ? <p className="hint small">Source : <a href={source} target="_blank" rel="noreferrer">{source.replace(/^https?:\/\//, "").slice(0, 70)}</a></p> : null}
 
         <div className="fieldRow">
           <label className="field">
@@ -300,6 +378,25 @@ export default function CvPage() {
         </div>
         <p className="hint small">PDF : dans la fenêtre d&apos;impression choisis « Enregistrer au format PDF ». Le texte reste sélectionnable, donc lisible par les ATS.</p>
 
+        <section className="report ai">
+          <h2>Assistant IA</h2>
+          {!owner.aiKey ? <p className="hint small">Ajoute une clé API dans <Link href="/admin/">/admin/</Link> pour activer l&apos;assistant.</p> : null}
+          <div className="actions">
+            <button className="cta ghost" onClick={doRewrite} disabled={!owner.aiKey || !jd.trim() || !!aiBusy}>{aiBusy === "rewrite" ? "Réécriture…" : "Reformuler pour cette offre"}</button>
+            {overrides ? <button className="cta ghost" onClick={undoRewrite}>Annuler la réécriture</button> : null}
+            <button className="cta ghost" onClick={doAdvise} disabled={!owner.aiKey || !!aiBusy}>{aiBusy === "advise" ? "Analyse…" : "Que dois-je améliorer ?"}</button>
+          </div>
+          {aiError ? <p className="warn">{aiError}</p> : null}
+          {aiNotes ? <p className="hint small">{aiNotes}</p> : null}
+          {aiIssues.length ? (
+            <div className="warn">
+              <strong>À vérifier avant d&apos;envoyer :</strong>
+              <ul>{aiIssues.map((i) => <li key={i}>{i}</li>)}</ul>
+            </div>
+          ) : overrides ? <p className="ok">Contrôle : aucun outil ni chiffre ajouté par rapport à ton profil.</p> : null}
+          {advice ? <div className="advice">{advice}</div> : null}
+        </section>
+
         <section className="report" aria-live="polite">
           <h2>Correspondance avec l&apos;offre</h2>
           {report.warnings.map((w) => (
@@ -323,7 +420,7 @@ export default function CvPage() {
                 {report.missing.map((t) => (<span className="chip gap" key={t.key}>{t.label}</span>))}
                 {report.missing.length === 0 ? <span className="hint small">Aucun</span> : null}
               </div>
-              <p className="hint small">Ajoute un écart à <code>content.ts</code> uniquement si tu le maîtrises vraiment (projet, cours, stage). Sinon, laisse-le : mieux vaut un CV honnête qu&apos;un entretien raté.</p>
+              <p className="hint small">Ajoute un écart à ton profil (/admin/) uniquement si tu le maîtrises vraiment (projet, cours, stage). Sinon, laisse-le : mieux vaut un CV honnête qu&apos;un entretien raté.</p>
               {report.otherTerms.length ? (
                 <>
                   <h3>Autres termes répétés dans l&apos;offre</h3>

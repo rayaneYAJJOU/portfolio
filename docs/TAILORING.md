@@ -1,8 +1,8 @@
 # Adapter son CV à chaque offre
 
-Tout part d'une seule source de vérité : `app/content.ts` (FR + EN). Le portfolio et le CV en sont deux
+Tout part d'une seule source de vérité : `data/profile.json` (FR + EN), éditable dans `/admin/`. Le portfolio et le CV en sont deux
 vues. L'outil `/cv/` ne fait que **choisir, ordonner et mettre en avant** ce qui s'y trouve déjà.
-Il n'ajoute jamais une compétence absente de `content.ts`.
+Il n'ajoute jamais une compétence absente de ton profil (`/admin/`).
 
 ## Le rituel pour chaque candidature (≈ 5 min)
 
@@ -13,7 +13,7 @@ Il n'ajoute jamais une compétence absente de `content.ts`.
 4. Lis **Correspondance** :
    - *Couvert* : ce que ton profil a déjà. Ces termes remontent dans le résumé et les compétences.
    - *Écarts* : demandés par l'offre, absents de ton profil. Deux choix honnêtes seulement :
-     ajouter l'élément à `content.ts` **si tu l'as réellement fait** (projet, cours, stage), ou l'assumer comme écart.
+     ajouter l'élément à ton profil (`/admin/`) **si tu l'as réellement fait** (projet, cours, stage), ou l'assumer comme écart.
 5. Le nombre de projets est choisi automatiquement pour tenir sur **une page** (tu peux le forcer ; alerte si ça déborde), choisis la langue
    (déduite de l'offre : écris en anglais si l'offre est en anglais), puis **Exporter en PDF** (ou DOCX).
    Le fichier est nommé `Rayane_Yajjou_CV_<entreprise>_<LANGUE>`.
@@ -68,7 +68,7 @@ Relis toujours : tu dois pouvoir défendre chaque ligne en entretien.
 
 | | Outil `/cv/` | LLM seul (profil recollé à chaque fois) |
 | --- | --- | --- |
-| Fidélité au profil | Garantie : ne sort que ce qui est dans `content.ts` | À surveiller : peut gonfler ou inventer |
+| Fidélité au profil | Garantie : ne sort que ce qui est dans ton profil (`/admin/`) | À surveiller : peut gonfler ou inventer |
 | Mise en forme ATS | Toujours identique et sûre | Variable, à reformater |
 | Compréhension fine de l'offre | Limitée aux mots-clés connus | Bonne (nuances, synonymes, ton) |
 | Reformulation des puces | Non | Oui |
@@ -86,5 +86,5 @@ résumé retouché dans « Remplacer le résumé ».
 - **Radar des écarts** : « Enregistrer cette offre » garde les écarts dans ton navigateur ; après quelques
   offres, le radar classe ce qui revient le plus, donc **quoi apprendre en priorité**, avec une idée de mini-projet.
 - **En cours d'apprentissage** : une compétence que tu apprends vraiment (et pour laquelle tu as déjà commencé
-  un mini-projet) peut être ajoutée à `learning: []` dans `content.ts`. Elle n'apparaît sur le CV que si
+  un mini-projet) peut être ajoutée à `learning: []` dans ton profil (`/admin/`). Elle n'apparaît sur le CV que si
   l'offre la demande, sous l'intitulé « En cours d'apprentissage », jamais mélangée aux compétences acquises.

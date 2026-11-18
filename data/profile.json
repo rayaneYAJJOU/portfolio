@@ -1,0 +1,822 @@
+{
+  "fr": {
+    "name": "Rayane Yajjou",
+    "tagline": "Élève ingénieur à la recherche d'un stage de fin d'études (PFE)",
+    "headline": "Élève ingénieur – École Centrale Casablanca | Machine Learning, Data & Logiciel",
+    "availability": "Recherche un stage de fin d'études (PFE) de 5 à 6 mois, à partir de mars 2027",
+    "nav": {
+      "profile": "Profil",
+      "experience": "Expérience",
+      "education": "Éducation",
+      "projects": "Projets",
+      "extra": "Activités",
+      "contact": "Contact"
+    },
+    "labels": {
+      "contact": "Contact",
+      "skills": "Compétences",
+      "languages": "Langues",
+      "qualities": "Qualités",
+      "interests": "Intérêts",
+      "skillsUsed": "Compétences",
+      "viewOnGithub": "Voir sur GitHub",
+      "moreRepos": "Autres dépôts",
+      "cvTool": "CV adapté à une offre"
+    },
+    "profile": {
+      "heading": "Profil",
+      "body": "Élève ingénieur à l'École Centrale Casablanca, après deux années de classes préparatoires (CPGE) au Lycée Moulay Youssef. Je travaille à l'intersection des mathématiques, de l'informatique et de la physique : machine learning, modélisation et développement logiciel, avec deux stages en milieu industriel et médical.",
+      "cvSummary": "Élève ingénieur à l'École Centrale Casablanca, formé aux mathématiques, au machine learning et au développement logiciel. Deux stages (analyse de données industrielles, segmentation d'images médicales 3D) et plusieurs projets de modélisation en Python."
+    },
+    "skillGroups": [
+      {
+        "label": "Langages",
+        "items": [
+          "Python",
+          "C",
+          "Lua",
+          "R",
+          "SQL",
+          "JavaScript",
+          "TypeScript"
+        ]
+      },
+      {
+        "label": "IA & Machine Learning",
+        "items": [
+          "Machine Learning",
+          "Deep Learning",
+          "Science des données",
+          "CNN",
+          "U-Net",
+          "Vision par ordinateur",
+          "Imagerie médicale",
+          "XGBoost",
+          "LightGBM",
+          "Gradient Boosting",
+          "Random Forest",
+          "SMOTE",
+          "SHAP",
+          "PCA",
+          "Détection d'anomalies",
+          "Transport optimal",
+          "AutoML (ANAI)",
+          "Hugging Face Transformers"
+        ]
+      },
+      {
+        "label": "Bibliothèques & outils Python",
+        "items": [
+          "PyTorch",
+          "TensorFlow",
+          "pandas",
+          "NumPy",
+          "SciPy",
+          "matplotlib",
+          "Seaborn",
+          "Plotly",
+          "Streamlit",
+          "PyQt5",
+          "Pygame",
+          "Pymunk",
+          "scikit-optimize",
+          "Jupyter / Colab"
+        ]
+      },
+      {
+        "label": "Modélisation & Finance",
+        "items": [
+          "Optimisation de portefeuille (Markowitz, Black-Litterman)",
+          "Simulation Monte Carlo",
+          "Modélisation multi-agent"
+        ]
+      },
+      {
+        "label": "Développement",
+        "items": [
+          "Développement web",
+          "React",
+          "Développement logiciel",
+          "Programmation orientée objet",
+          "Développement jeux-vidéo"
+        ]
+      },
+      {
+        "label": "Systèmes industriels",
+        "items": [
+          "SCADA",
+          "GMAO",
+          "KPIs",
+          "Maintenance prédictive"
+        ]
+      },
+      {
+        "label": "Réseaux & Sécurité",
+        "items": [
+          "Réseaux Télécoms",
+          "Cybersécurité"
+        ]
+      }
+    ],
+    "learning": [],
+    "languages": [
+      {
+        "lang": "Français",
+        "level": "Compétences professionnelles"
+      },
+      {
+        "lang": "Anglais",
+        "level": "Bilingue"
+      },
+      {
+        "lang": "Arabe",
+        "level": "Langue natale"
+      }
+    ],
+    "qualities": [
+      "Créativité",
+      "Esprit analytique",
+      "Pensée critique",
+      "Autonomie",
+      "Polyvalence"
+    ],
+    "interests": [
+      "Mathématiques",
+      "Physique"
+    ],
+    "experience": {
+      "heading": "Expérience",
+      "items": [
+        {
+          "id": "amendis",
+          "title": "Amendis",
+          "role": "Stagiaire",
+          "place": "Tétouan, Maroc",
+          "period": "Avril 2025 – Août 2025",
+          "body": "J'ai d'abord travaillé sur la manipulation et la gestion de fichiers .prn relatifs aux relevés techniques du réseau. Par la suite, j'ai analysé et croisé des données issues des systèmes SCADA et GMAO (VAMS) afin de développer des indicateurs de performance (KPIs) destinés à optimiser la maintenance préventive et à améliorer l'efficacité des stations de pompage. Enfin, j'ai développé une application PyQt5 (visualisations matplotlib) pour passer d'un traitement sous Excel à un outil convivial, sur plusieurs Go de données issues de centaines de stations.",
+          "bullets": [
+            "Traité en Python (pandas) plusieurs Go de données de relevés techniques (fichiers .prn) issues de centaines de stations.",
+            "Croisé les données des systèmes SCADA et GMAO (VAMS) pour construire des indicateurs de performance (KPIs) visant à optimiser la maintenance préventive et l'efficacité des stations de pompage.",
+            "Développé avec PyQt5 une application à interface graphique conviviale (visualisations et diagrammes matplotlib) pour remplacer un traitement sous Excel."
+          ],
+          "skills": [
+            "Python",
+            "pandas",
+            "matplotlib",
+            "PyQt5",
+            "Interface graphique",
+            "Visualisation de données",
+            "Développement logiciel",
+            "SCADA",
+            "GMAO",
+            "KPIs"
+          ]
+        },
+        {
+          "id": "smart",
+          "title": "3D SMART Factory",
+          "role": "Stagiaire",
+          "period": "Août 2024 – Septembre 2024",
+          "body": "J'ai développé des algorithmes de segmentation sémantique appliqués aux images médicales 3D et analysé des données médicales afin d'améliorer la précision de la segmentation des structures anatomiques.",
+          "bullets": [
+            "Développé avec PyTorch des modèles de segmentation sémantique (CNN, U-Net/NVNet) pour des images IRM 3D au format NIfTI (jeu de données BraTS).",
+            "Entraîné les modèles avec une fonction de perte Dice et analysé les données médicales pour améliorer la précision de segmentation des structures anatomiques."
+          ],
+          "skills": [
+            "Python",
+            "PyTorch",
+            "NumPy",
+            "Hugging Face Transformers",
+            "CNN",
+            "U-Net",
+            "Deep Learning",
+            "Vision par ordinateur",
+            "Imagerie médicale",
+            "NIfTI",
+            "BraTS"
+          ]
+        }
+      ]
+    },
+    "education": {
+      "heading": "Éducation",
+      "items": [
+        {
+          "id": "ecc",
+          "title": "École Centrale Casablanca",
+          "role": "Cycle ingénieur",
+          "period": "2023 – 2027",
+          "body": "Cycle ingénieur centralien, diplôme prévu en 2027.",
+          "bullets": [],
+          "skills": [
+            "Mathématiques",
+            "Physique",
+            "Machine Learning",
+            "Deep Learning",
+            "Développement web",
+            "Développement logiciel",
+            "Programmation orientée objet",
+            "Réseaux Télécoms",
+            "Cybersécurité",
+            "Python",
+            "R"
+          ]
+        },
+        {
+          "id": "cpge",
+          "title": "CPGE – Lycée Moulay Youssef",
+          "role": "Classes préparatoires",
+          "period": "2021 – 2023",
+          "body": "Deux années de classes préparatoires aux concours d'entrée aux Grandes Écoles d'Ingénieur en France et au Maroc.",
+          "bullets": [],
+          "skills": [
+            "Mathématiques",
+            "Physique",
+            "Python",
+            "SQL"
+          ]
+        }
+      ]
+    },
+    "projects": {
+      "heading": "Projets",
+      "items": [
+        {
+          "id": "innovation",
+          "title": "Application d'analyse des risques et d'optimisation de portefeuille",
+          "context": "Projet Innovation",
+          "body": "J'ai conçu une application qui met en avant les risques associés aux actifs dans un portefeuille en optimisant sa composition.",
+          "bullets": [
+            "Conçu une application Streamlit d'analyse des risques et d'optimisation de portefeuille (frontière efficiente de Markowitz, Black-Litterman, ratio de Sortino).",
+            "Simulé des scénarios par Monte Carlo et intégré un modèle de machine learning de prédiction."
+          ],
+          "skills": [
+            "Python",
+            "pandas",
+            "NumPy",
+            "SciPy",
+            "scikit-optimize",
+            "TensorFlow",
+            "Streamlit",
+            "Plotly",
+            "Matplotlib",
+            "Seaborn",
+            "yfinance",
+            "Markowitz",
+            "Black-Litterman",
+            "Monte Carlo",
+            "Machine Learning",
+            "Optimisation de portefeuille",
+            "Finance"
+          ]
+        },
+        {
+          "id": "scientific",
+          "title": "Maintenance prédictive par transport optimal",
+          "context": "Projet Scientifique",
+          "body": "J'ai créé un modèle de machine learning dans le contexte de la maintenance prédictive, en utilisant la théorie du transport optimal pour trouver un seuil qui détermine l'état d'une machine.",
+          "bullets": [
+            "Appliqué un algorithme de transport optimal pour détecter des anomalies à partir d'un seuil, sur une base de télémétrie de machine (Kaggle).",
+            "Entraîné des modèles de machine learning pour la maintenance prédictive (XGBoost, LightGBM, gradient boosting, random forest, bibliothèque AutoML ANAI) dans un notebook Colab."
+          ],
+          "skills": [
+            "Python",
+            "Transport optimal",
+            "Détection d'anomalies",
+            "Machine Learning",
+            "AutoML",
+            "Maintenance prédictive",
+            "XGBoost",
+            "LightGBM",
+            "Gradient Boosting",
+            "Random Forest",
+            "Jupyter",
+            "Google Colab"
+          ]
+        },
+        {
+          "id": "lbd",
+          "title": "Évaluation du niveau des étudiants : modèle ML et application web",
+          "context": "Projet Learning by Doing",
+          "body": "J'ai développé un modèle d'apprentissage automatique visant à évaluer le niveau de compétence des étudiants, ainsi qu'un site web servant d'interface graphique pour les différents cas d'utilisation.",
+          "bullets": [
+            "Développé un modèle de machine learning (XGBoost, LightGBM, random forest) évaluant le niveau de compétence des étudiants, sur un jeu de données partiellement généré faute de données réelles.",
+            "Réalisé l'interface web (React, TypeScript) couvrant les différents cas d'utilisation."
+          ],
+          "skills": [
+            "Machine Learning",
+            "Python",
+            "XGBoost",
+            "LightGBM",
+            "Random Forest",
+            "Google Colab",
+            "React",
+            "TypeScript",
+            "JavaScript",
+            "Développement web"
+          ]
+        },
+        {
+          "id": "evac",
+          "title": "Simulateur d'évacuation multi-agent avec optimisation par IA",
+          "context": "Projet à enjeux",
+          "body": "J'ai conçu un simulateur d'évacuation réaliste intégrant des comportements d'agents avancés et des contraintes environnementales afin d'améliorer la résilience des infrastructures. Grâce à l'intelligence artificielle et au Machine Learning, j'ai optimisé les itinéraires en temps réel et créé un outil prédictif des temps d'évacuation, permettant ainsi de réduire la congestion aux sorties.",
+          "bullets": [
+            "Conçu en Python (Pygame, Pymunk) un simulateur d'évacuation réaliste intégrant des comportements d'agents avancés et des contraintes environnementales.",
+            "Optimisé les itinéraires en temps réel par IA et Machine Learning pour réduire la congestion aux sorties.",
+            "Créé un outil prédictif des temps d'évacuation."
+          ],
+          "skills": [
+            "Python",
+            "Pygame",
+            "Pymunk",
+            "Machine Learning",
+            "Modélisation multi-agent"
+          ]
+        },
+        {
+          "id": "codingweek",
+          "title": "Détection de fraude bancaire par apprentissage supervisé",
+          "context": "Coding Week",
+          "body": "J'ai participé à un événement au cours duquel j'ai développé des modèles à base d'arbres (arbre de décision, random forest, gradient boosting, XGBoost, LightGBM) pour détecter les fraudes dans des transactions bancaires, en traitant le déséquilibre des classes (SMOTE-Tomek) et en interprétant les modèles avec SHAP. Cet exercice m'a permis d'acquérir une compréhension pratique des concepts fondamentaux de l'apprentissage automatique.",
+          "bullets": [
+            "Développé des modèles de classification à base d'arbres (arbre de décision, random forest, gradient boosting, XGBoost, LightGBM) pour détecter la fraude dans des transactions bancaires.",
+            "Traité le déséquilibre des classes (SMOTE-Tomek), réduit la dimension par PCA et interprété les modèles avec SHAP."
+          ],
+          "skills": [
+            "Python",
+            "XGBoost",
+            "LightGBM",
+            "Gradient Boosting",
+            "Random Forest",
+            "SMOTE",
+            "SHAP",
+            "PCA",
+            "Classification",
+            "Machine Learning",
+            "Google Colab"
+          ]
+        },
+        {
+          "id": "expe",
+          "title": "Mesure de la permittivité électrique",
+          "context": "Projet Formation Expérimentale",
+          "body": "J'ai mesuré la valeur de la permittivité électrique en utilisant des circuits classiques (RC, RLC, ponts de type Wheatstone, etc.).",
+          "bullets": [
+            "Mesuré la permittivité électrique à l'aide de circuits RC, RLC et de ponts de type Wheatstone."
+          ],
+          "skills": [
+            "Mathématiques",
+            "Physique"
+          ]
+        }
+      ]
+    },
+    "extra": {
+      "heading": "Activités extra-scolaires",
+      "items": [
+        {
+          "id": "cp",
+          "title": "Programmation compétitive",
+          "body": "J'ai participé à plusieurs concours nationaux de programmation, notamment ITHOLIC (2022, 2024), JNJD, Game of Code, IT CODE et MNPC.",
+          "bullets": [
+            "Participé à plusieurs concours nationaux de programmation : ITHOLIC (2022, 2024), JNJD, Game of Code, IT CODE, MNPC."
+          ],
+          "skills": [
+            "Python",
+            "Algorithmique"
+          ]
+        }
+      ]
+    },
+    "freelance": {
+      "heading": "Freelance",
+      "intro": "En parallèle des stages, je suis disponible pour des missions freelance ponctuelles.",
+      "services": [
+        {
+          "title": "Développement web",
+          "body": "Sites vitrines, applications web sur mesure, tableaux de bord..."
+        },
+        {
+          "title": "Machine Learning & données",
+          "body": "Modèles prédictifs, analyse de données, automatisation d'indicateurs..."
+        }
+      ],
+      "cta": "Discuter d'un projet"
+    },
+    "footer": {
+      "heading": "Contact",
+      "body": "Ouvert aux opportunités de stage de fin d'études (PFE). N'hésitez pas à me contacter."
+    }
+  },
+  "en": {
+    "name": "Rayane Yajjou",
+    "tagline": "Engineering student looking for a final-year internship (PFE)",
+    "headline": "Engineering Student – École Centrale Casablanca | Machine Learning, Data & Software",
+    "availability": "Seeking a 5–6 month final-year internship (PFE) starting March 2027",
+    "nav": {
+      "profile": "Profile",
+      "experience": "Experience",
+      "education": "Education",
+      "projects": "Projects",
+      "extra": "Activities",
+      "contact": "Contact"
+    },
+    "labels": {
+      "contact": "Contact",
+      "skills": "Skills",
+      "languages": "Languages",
+      "qualities": "Qualities",
+      "interests": "Interests",
+      "skillsUsed": "Skills",
+      "viewOnGithub": "View on GitHub",
+      "moreRepos": "More repositories",
+      "cvTool": "Tailor my CV to a job"
+    },
+    "profile": {
+      "heading": "Profile",
+      "body": "Engineering student at École Centrale Casablanca, after two years of preparatory classes (CPGE) at Lycée Moulay Youssef. I work at the intersection of mathematics, computer science and physics: machine learning, modeling and software development, with two internships in industrial and medical settings.",
+      "cvSummary": "Engineering student at École Centrale Casablanca with a background in mathematics, machine learning and software development. Two internships (industrial data analysis, 3D medical image segmentation) and several modeling projects in Python."
+    },
+    "skillGroups": [
+      {
+        "label": "Languages",
+        "items": [
+          "Python",
+          "C",
+          "Lua",
+          "R",
+          "SQL",
+          "JavaScript",
+          "TypeScript"
+        ]
+      },
+      {
+        "label": "AI & Machine Learning",
+        "items": [
+          "Machine Learning",
+          "Deep Learning",
+          "Data Science",
+          "CNN",
+          "U-Net",
+          "Computer Vision",
+          "Medical Imaging",
+          "XGBoost",
+          "LightGBM",
+          "Gradient Boosting",
+          "Random Forest",
+          "SMOTE",
+          "SHAP",
+          "PCA",
+          "Anomaly Detection",
+          "Optimal Transport",
+          "AutoML (ANAI)",
+          "Hugging Face Transformers"
+        ]
+      },
+      {
+        "label": "Python Libraries & Tools",
+        "items": [
+          "PyTorch",
+          "TensorFlow",
+          "pandas",
+          "NumPy",
+          "SciPy",
+          "Matplotlib",
+          "Seaborn",
+          "Plotly",
+          "Streamlit",
+          "PyQt5",
+          "Pygame",
+          "Pymunk",
+          "scikit-optimize",
+          "Jupyter / Colab"
+        ]
+      },
+      {
+        "label": "Modeling & Finance",
+        "items": [
+          "Portfolio Optimization (Markowitz, Black-Litterman)",
+          "Monte Carlo Simulation",
+          "Agent-Based Modeling"
+        ]
+      },
+      {
+        "label": "Development",
+        "items": [
+          "Web Development",
+          "React",
+          "Software Development",
+          "Object-Oriented Programming",
+          "Video Game Development"
+        ]
+      },
+      {
+        "label": "Industrial Systems",
+        "items": [
+          "SCADA",
+          "CMMS",
+          "KPIs",
+          "Predictive Maintenance"
+        ]
+      },
+      {
+        "label": "Networks & Security",
+        "items": [
+          "Telecom Networks",
+          "Cybersecurity"
+        ]
+      }
+    ],
+    "learning": [],
+    "languages": [
+      {
+        "lang": "French",
+        "level": "Professional working proficiency"
+      },
+      {
+        "lang": "English",
+        "level": "Bilingual"
+      },
+      {
+        "lang": "Arabic",
+        "level": "Native"
+      }
+    ],
+    "qualities": [
+      "Creativity",
+      "Analytical mindset",
+      "Critical thinking",
+      "Autonomy",
+      "Versatility"
+    ],
+    "interests": [
+      "Mathematics",
+      "Physics"
+    ],
+    "experience": {
+      "heading": "Experience",
+      "items": [
+        {
+          "id": "amendis",
+          "title": "Amendis",
+          "role": "Intern",
+          "place": "Tétouan, Morocco",
+          "period": "Apr 2025 – Aug 2025",
+          "body": "I started by handling and processing .prn files containing technical network readings. I then analyzed and cross-referenced data from the SCADA and CMMS (VAMS) systems to build performance indicators (KPIs) aimed at optimizing preventive maintenance and improving pumping station efficiency. Finally, I built a PyQt5 application (matplotlib visualizations) to move from an Excel-based process to a user-friendly tool, on several GB of data from hundreds of stations.",
+          "bullets": [
+            "Processed several GB of technical readings data (.prn files) from hundreds of stations in Python (pandas).",
+            "Cross-referenced SCADA and CMMS (VAMS) data to build performance indicators (KPIs) aimed at optimizing preventive maintenance and pumping station efficiency.",
+            "Developed a user-friendly PyQt5 graphical application (matplotlib charts and diagrams) to replace an Excel-based process."
+          ],
+          "skills": [
+            "Python",
+            "pandas",
+            "Matplotlib",
+            "PyQt5",
+            "GUI",
+            "Data Visualization",
+            "Software Development",
+            "SCADA",
+            "CMMS",
+            "KPIs"
+          ]
+        },
+        {
+          "id": "smart",
+          "title": "3D SMART Factory",
+          "role": "Intern",
+          "period": "Aug 2024 – Sep 2024",
+          "body": "I developed semantic segmentation algorithms for 3D medical imaging and analyzed medical data to improve the accuracy of anatomical structure segmentation.",
+          "bullets": [
+            "Developed PyTorch semantic segmentation models (CNN, U-Net/NVNet) for 3D MRI scans in NIfTI format (BraTS dataset).",
+            "Trained the models with a Dice loss function and analyzed medical data to improve the segmentation accuracy of anatomical structures."
+          ],
+          "skills": [
+            "Python",
+            "PyTorch",
+            "NumPy",
+            "Hugging Face Transformers",
+            "CNN",
+            "U-Net",
+            "Deep Learning",
+            "Computer Vision",
+            "Medical Imaging",
+            "NIfTI",
+            "BraTS"
+          ]
+        }
+      ]
+    },
+    "education": {
+      "heading": "Education",
+      "items": [
+        {
+          "id": "ecc",
+          "title": "École Centrale Casablanca",
+          "role": "Engineering Program",
+          "period": "2023 – 2027",
+          "body": "Centralien engineering program, degree expected in 2027.",
+          "bullets": [],
+          "skills": [
+            "Mathematics",
+            "Physics",
+            "Machine Learning",
+            "Deep Learning",
+            "Web Development",
+            "Software Development",
+            "Object-Oriented Programming",
+            "Telecom Networks",
+            "Cybersecurity",
+            "Python",
+            "R"
+          ]
+        },
+        {
+          "id": "cpge",
+          "title": "CPGE – Lycée Moulay Youssef",
+          "role": "Preparatory Classes",
+          "period": "2021 – 2023",
+          "body": "Two years of preparatory classes for entrance exams to Grandes Écoles d'Ingénieurs in France and Morocco.",
+          "bullets": [],
+          "skills": [
+            "Mathematics",
+            "Physics",
+            "Python",
+            "SQL"
+          ]
+        }
+      ]
+    },
+    "projects": {
+      "heading": "Projects",
+      "items": [
+        {
+          "id": "innovation",
+          "title": "Portfolio Risk Analysis & Optimization App",
+          "context": "Innovation Project",
+          "body": "I designed an application that surfaces the risks associated with assets in a portfolio while optimizing its composition.",
+          "bullets": [
+            "Designed a Streamlit application for portfolio risk analysis and optimization (Markowitz efficient frontier, Black-Litterman, Sortino ratio).",
+            "Simulated scenarios with Monte Carlo and integrated a machine learning prediction model."
+          ],
+          "skills": [
+            "Python",
+            "pandas",
+            "NumPy",
+            "SciPy",
+            "scikit-optimize",
+            "TensorFlow",
+            "Streamlit",
+            "Plotly",
+            "Matplotlib",
+            "Seaborn",
+            "yfinance",
+            "Markowitz",
+            "Black-Litterman",
+            "Monte Carlo",
+            "Machine Learning",
+            "Portfolio Optimization",
+            "Finance"
+          ]
+        },
+        {
+          "id": "scientific",
+          "title": "Predictive Maintenance with Optimal Transport",
+          "context": "Scientific Project",
+          "body": "I built a machine learning model for predictive maintenance, using optimal transport theory to find a threshold that determines a machine's health state.",
+          "bullets": [
+            "Applied an optimal transport algorithm to detect anomalies from a threshold, on a machine telemetry dataset (Kaggle).",
+            "Trained machine learning models for predictive maintenance (XGBoost, LightGBM, gradient boosting, random forest, ANAI AutoML library) in a Colab notebook."
+          ],
+          "skills": [
+            "Python",
+            "Optimal Transport",
+            "Anomaly Detection",
+            "Machine Learning",
+            "AutoML",
+            "Predictive Maintenance",
+            "XGBoost",
+            "LightGBM",
+            "Gradient Boosting",
+            "Random Forest",
+            "Jupyter",
+            "Google Colab"
+          ]
+        },
+        {
+          "id": "lbd",
+          "title": "Student Skill-Level Assessment: ML Model & Web App",
+          "context": "Learning by Doing Project",
+          "body": "I developed a machine learning model to assess students' skill level, along with a website serving as the graphical interface for the different use cases.",
+          "bullets": [
+            "Developed a machine learning model (XGBoost, LightGBM, random forest) assessing students' skill level, on a partially generated dataset due to the lack of real data.",
+            "Built the web interface (React, TypeScript) covering the different use cases."
+          ],
+          "skills": [
+            "Machine Learning",
+            "Python",
+            "XGBoost",
+            "LightGBM",
+            "Random Forest",
+            "Google Colab",
+            "React",
+            "TypeScript",
+            "JavaScript",
+            "Web Development"
+          ]
+        },
+        {
+          "id": "evac",
+          "title": "Multi-Agent Evacuation Simulator with AI Optimization",
+          "context": "Real-World Challenge Project",
+          "body": "I built a physically realistic evacuation simulator integrating advanced agent behaviors and environmental constraints to enhance infrastructure resilience. Using AI and Machine Learning, I optimized routes in real time and created a predictive tool for evacuation times, effectively reducing exit congestion.",
+          "bullets": [
+            "Built a realistic evacuation simulator in Python (Pygame, Pymunk) integrating advanced agent behaviors and environmental constraints.",
+            "Optimized routes in real time with AI and Machine Learning to reduce congestion at exits.",
+            "Created a predictive tool for evacuation times."
+          ],
+          "skills": [
+            "Python",
+            "Pygame",
+            "Pymunk",
+            "Machine Learning",
+            "Agent-Based Modeling"
+          ]
+        },
+        {
+          "id": "codingweek",
+          "title": "Banking Fraud Detection with Supervised Learning",
+          "context": "Coding Week",
+          "body": "I took part in an event where I built tree-based models (decision tree, random forest, gradient boosting, XGBoost, LightGBM) to detect fraud in banking transactions, handling class imbalance (SMOTE-Tomek) and interpreting the models with SHAP — a hands-on introduction to core machine learning concepts.",
+          "bullets": [
+            "Developed tree-based classification models (decision tree, random forest, gradient boosting, XGBoost, LightGBM) to detect fraud in banking transactions.",
+            "Handled class imbalance (SMOTE-Tomek), reduced dimensionality with PCA and interpreted the models with SHAP."
+          ],
+          "skills": [
+            "Python",
+            "XGBoost",
+            "LightGBM",
+            "Gradient Boosting",
+            "Random Forest",
+            "SMOTE",
+            "SHAP",
+            "PCA",
+            "Classification",
+            "Machine Learning",
+            "Google Colab"
+          ]
+        },
+        {
+          "id": "expe",
+          "title": "Measurement of Electric Permittivity",
+          "context": "Experimental Training Project",
+          "body": "I measured electric permittivity using classic circuits (RC, RLC, Wheatstone-type bridges, etc.).",
+          "bullets": [
+            "Measured electric permittivity using RC and RLC circuits and Wheatstone-type bridges."
+          ],
+          "skills": [
+            "Mathematics",
+            "Physics"
+          ]
+        }
+      ]
+    },
+    "extra": {
+      "heading": "Extracurricular activities",
+      "items": [
+        {
+          "id": "cp",
+          "title": "Competitive Programming",
+          "body": "I've taken part in several national programming contests, including ITHOLIC (2022, 2024), JNJD, Game of Code, IT CODE, and MNPC.",
+          "bullets": [
+            "Participated in several national programming contests: ITHOLIC (2022, 2024), JNJD, Game of Code, IT CODE, MNPC."
+          ],
+          "skills": [
+            "Python",
+            "Algorithms"
+          ]
+        }
+      ]
+    },
+    "freelance": {
+      "heading": "Freelance",
+      "intro": "Alongside internships, I'm available for select freelance work.",
+      "services": [
+        {
+          "title": "Web development",
+          "body": "Landing pages, custom web apps, dashboards..."
+        },
+        {
+          "title": "Machine learning & data",
+          "body": "Predictive models, data analysis, KPI automation..."
+        }
+      ],
+      "cta": "Discuss a project"
+    },
+    "footer": {
+      "heading": "Contact",
+      "body": "Open to final-year internship (PFE) opportunities, feel free to reach out."
+    }
+  }
+}

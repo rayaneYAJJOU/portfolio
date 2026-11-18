@@ -44,15 +44,8 @@
       {
         "label": "IA & Machine Learning",
         "items": [
-          "Machine Learning",
-          "Deep Learning",
-          "Science des données",
-          "CNN",
           "U-Net",
           "Vision par ordinateur",
-          "Imagerie médicale",
-          "XGBoost",
-          "LightGBM",
           "Gradient Boosting",
           "Random Forest",
           "SMOTE",
@@ -98,8 +91,7 @@
       {
         "label": "Autre",
         "items": [
-          "Optimisation de portefeuille (Markowitz",
-          "Black-Litterman)",
+          "Optimisation de portefeuille",
           "Simulation Monte Carlo",
           "Modélisation multi-agent",
           "Réseaux Télécoms",
@@ -448,15 +440,8 @@
       {
         "label": "AI & Machine Learning",
         "items": [
-          "Machine Learning",
-          "Deep Learning",
-          "Data Science",
-          "CNN",
           "U-Net",
           "Computer Vision",
-          "Medical Imaging",
-          "XGBoost",
-          "LightGBM",
           "Gradient Boosting",
           "Random Forest",
           "SMOTE",
@@ -488,14 +473,6 @@
         ]
       },
       {
-        "label": "Modeling & Finance",
-        "items": [
-          "Portfolio Optimization (Markowitz, Black-Litterman)",
-          "Monte Carlo Simulation",
-          "Agent-Based Modeling"
-        ]
-      },
-      {
         "label": "Development",
         "items": [
           "Web Development",
@@ -508,19 +485,22 @@
         ]
       },
       {
-        "label": "Industrial Systems",
-        "items": [
-          "SCADA",
-          "CMMS",
-          "KPIs",
-          "Predictive Maintenance"
-        ]
-      },
-      {
         "label": "Networks & Security",
         "items": [
           "Telecom Networks",
           "Cybersecurity"
+        ]
+      },
+      {
+        "label": "Other",
+        "items": [
+          "Portfolio Optimization",
+          "Monte Carlo Simulation",
+          "Agent-Based Modeling",
+          "SCADA",
+          "CMMS",
+          "KPIs",
+          "Predictive Maintenance"
         ]
       }
     ],

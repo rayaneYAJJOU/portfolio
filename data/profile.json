@@ -157,9 +157,9 @@
           "period": "Avril 2025 – Août 2025",
           "body": "J'ai d'abord travaillé sur la manipulation et la gestion de fichiers .prn relatifs aux relevés techniques du réseau. Par la suite, j'ai analysé et croisé des données issues des systèmes SCADA et GMAO (VAMS) afin de développer des indicateurs de performance (KPIs) destinés à optimiser la maintenance préventive et à améliorer l'efficacité des stations de pompage. Enfin, j'ai développé une application PyQt5 (visualisations matplotlib) pour passer d'un traitement sous Excel à un outil convivial, sur plusieurs Go de données issues de centaines de stations.",
           "bullets": [
-            "Traité en Python (pandas) plusieurs Go de données de relevés techniques (fichiers .prn) issues de centaines de stations.",
+            "Traité en Python (pandas) 2 Go de données de relevés techniques (fichiers .prn) issues de plus de 700 de stations.",
             "Croisé les données des systèmes SCADA et GMAO (VAMS) pour construire des indicateurs de performance (KPIs) visant à optimiser la maintenance préventive et l'efficacité des stations de pompage.",
-            "Développé avec PyQt5 une application à interface graphique conviviale (visualisations et diagrammes matplotlib) pour remplacer un traitement sous Excel."
+            "Développé avec PyQt5 une application à interface graphique conviviale (visualisations et diagrammes matplotlib) pour remplacer un traitement sous Excel, ayant réduit le temps de traitement des heures à quelques minutes."
           ],
           "skills": [
             "Python",
@@ -181,8 +181,7 @@
           "period": "Août 2024 – Septembre 2024",
           "body": "J'ai développé des algorithmes de segmentation sémantique appliqués aux images médicales 3D et analysé des données médicales afin d'améliorer la précision de la segmentation des structures anatomiques.",
           "bullets": [
-            "Développé avec PyTorch des modèles de segmentation sémantique (CNN, U-Net/NVNet) pour des images IRM 3D au format NIfTI (jeu de données BraTS).",
-            "Entraîné les modèles avec une fonction de perte Dice et analysé les données médicales pour améliorer la précision de segmentation des structures anatomiques."
+            "Trained U-Net models on nearly 6,000 3D MRI volumes from the BraTS dataset using a Dice loss function and analyzed medical imaging data to improve tumor sub-region segmentation, reducing validation loss by ~48% over 100 epochs and achieving a 0.55 Dice score on peritumoral edema (99.3% overall accuracy)."
           ],
           "skills": [
             "Python",
@@ -249,8 +248,8 @@
           "context": "Projet Innovation",
           "body": "J'ai conçu une application qui met en avant les risques associés aux actifs dans un portefeuille en optimisant sa composition.",
           "bullets": [
-            "Conçu une application Streamlit d'analyse des risques et d'optimisation de portefeuille (frontière efficiente de Markowitz, Black-Litterman, ratio de Sortino).",
-            "Simulé des scénarios par Monte Carlo et intégré un modèle de machine learning de prédiction."
+            "Conçu une application Streamlit d'analyse des risques et d'optimisation de portefeuille (frontière efficiente de Markowitz, Black-Litterman, ratio de Sortino), testée sur des actifs financiers extraite avec yfinance sur une durée personnalisée.",
+            "Simulé des scénarios par Monte Carlo et intégré un modèle LSTM utilisant Keras pour prédire les prix des actions."
           ],
           "skills": [
             "Python",
@@ -259,6 +258,7 @@
             "SciPy",
             "scikit-optimize",
             "TensorFlow",
+            "Keras",
             "Streamlit",
             "Plotly",
             "Matplotlib",
@@ -569,9 +569,9 @@
           "period": "Apr 2025 – Aug 2025",
           "body": "I started by handling and processing .prn files containing technical network readings. I then analyzed and cross-referenced data from the SCADA and CMMS (VAMS) systems to build performance indicators (KPIs) aimed at optimizing preventive maintenance and improving pumping station efficiency. Finally, I built a PyQt5 application (matplotlib visualizations) to move from an Excel-based process to a user-friendly tool, on several GB of data from hundreds of stations.",
           "bullets": [
-            "Processed several GB of technical readings data (.prn files) from hundreds of stations in Python (pandas).",
+            "Processed 2 GB of technical readings data (.prn files) from over 700 stations in Python (pandas).",
             "Cross-referenced SCADA and CMMS (VAMS) data to build performance indicators (KPIs) aimed at optimizing preventive maintenance and pumping station efficiency.",
-            "Developed a user-friendly PyQt5 graphical application (matplotlib charts and diagrams) to replace an Excel-based process."
+            "Developed a user-friendly PyQt5 graphical application (matplotlib charts and diagrams) to replace an Excel-based process, reducing processing time from hours to a few minutes."
           ],
           "skills": [
             "Python",
@@ -593,8 +593,7 @@
           "period": "Aug 2024 – Sep 2024",
           "body": "I developed semantic segmentation algorithms for 3D medical imaging and analyzed medical data to improve the accuracy of anatomical structure segmentation.",
           "bullets": [
-            "Developed PyTorch semantic segmentation models (CNN, U-Net/NVNet) for 3D MRI scans in NIfTI format (BraTS dataset).",
-            "Trained the models with a Dice loss function and analyzed medical data to improve the segmentation accuracy of anatomical structures."
+            "Trained U-Net models on nearly 6,000 3D MRI volumes from the BraTS dataset using a Dice loss function and analyzed medical imaging data to improve tumor sub-region segmentation, reducing validation loss by ~48% over 100 epochs and achieving a 0.55 Dice score on peritumoral edema (99.3% overall accuracy)."
           ],
           "skills": [
             "Python",
@@ -661,8 +660,8 @@
           "context": "Innovation Project",
           "body": "I designed an application that surfaces the risks associated with assets in a portfolio while optimizing its composition.",
           "bullets": [
-            "Designed a Streamlit application for portfolio risk analysis and optimization (Markowitz efficient frontier, Black-Litterman, Sortino ratio).",
-            "Simulated scenarios with Monte Carlo and integrated a machine learning prediction model."
+            "Designed a Streamlit application for portfolio risk analysis and optimization (Markowitz efficient frontier, Black-Litterman, Sortino ratio), trained on stock data extracted with yfinance on a modifiable duration.",
+            "Simulated scenarios with Monte Carlo and integrated an LSTM model using Keras to predict future stock prices."
           ],
           "skills": [
             "Python",
@@ -671,6 +670,7 @@
             "SciPy",
             "scikit-optimize",
             "TensorFlow",
+            "Keras",
             "Streamlit",
             "Plotly",
             "Matplotlib",

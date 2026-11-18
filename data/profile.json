@@ -41,7 +41,10 @@
           "Git",
           "Docker",
           "SSH",
-          "Bash"
+          "Bash",
+          "Linux",
+          "Ubuntu",
+          "Cloud"
         ]
       },
       {
@@ -70,9 +73,7 @@
           "Développement logiciel",
           "Simulations Monte Carlo",
           "Modélisation multi-agents",
-          "SCADA",
-          "Linux",
-          "Ubuntu"
+          "SCADA"
         ]
       }
     ],
@@ -431,7 +432,10 @@
           "Git",
           "Docker",
           "SSH",
-          "Bash"
+          "Bash",
+          "Linux",
+          "Ubuntu",
+          "Cloud"
         ]
       },
       {
@@ -460,9 +464,7 @@
           "Software Development",
           "Monte Carlo Simulations",
           "Agent Based Modeling",
-          "SCADA",
-          "Linux",
-          "Ubuntu"
+          "SCADA"
         ]
       }
     ],

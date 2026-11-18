@@ -164,7 +164,7 @@
           "period": "Août 2024 – Septembre 2024",
           "body": "J'ai développé des algorithmes de segmentation sémantique appliqués aux images médicales 3D et analysé des données médicales afin d'améliorer la précision de la segmentation des structures anatomiques.",
           "bullets": [
-            "Trained U-Net models on nearly 6,000 3D MRI volumes from the BraTS dataset using a Dice loss function and analyzed medical imaging data to improve tumor sub-region segmentation, reducing validation loss by ~48% over 100 epochs and achieving a 0.55 Dice score on peritumoral edema (99.3% overall accuracy)."
+            "Entraîné des modèles U-Net sur près de 6 000 volumes d'IRM 3D issus du jeu de données BraTS à l'aide d'une fonction de perte Dice (Dice loss) et analysé des données d'imagerie médicale afin d'améliorer la segmentation des sous-régions tumorales, réduisant la perte de validation d'environ 48 % sur 100 époques et atteignant un score Dice de 0,55 sur l'œdème péritumoral (précision globale de 99,3 %)."
           ],
           "skills": [
             "Python",

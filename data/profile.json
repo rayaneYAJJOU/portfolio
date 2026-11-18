@@ -39,7 +39,9 @@
           "Lua",
           "R",
           "Git",
-          "Docker"
+          "Docker",
+          "SSH",
+          "Bash"
         ]
       },
       {
@@ -60,7 +62,18 @@
       },
       {
         "label": "Développement & Modélisation",
-        "items": []
+        "items": [
+          "React",
+          "Streamlit",
+          "PyQt5",
+          "OOP",
+          "Développement logiciel",
+          "Simulations Monte Carlo",
+          "Modélisation multi-agents",
+          "SCADA",
+          "Linux",
+          "Ubuntu"
+        ]
       }
     ],
     "learning": [],
@@ -186,6 +199,27 @@
     "projects": {
       "heading": "Projets",
       "items": [
+        {
+          "id": "e-mwmbkrui",
+          "title": "Bot Discord – Gestion des statistiques communautaires",
+          "body": "J'ai développé un bot Discord modulaire en Python avec la bibliothèque discord.py afin de gérer les statistiques d'une communauté de jeu Roblox comptant environ 3 000 membres. Le bot propose plusieurs fonctionnalités, notamment la consultation des profils individuels, les classements statistiques et les défis hebdomadaires.\nJ'ai organisé l'application en plusieurs modules distincts couvrant ses principales fonctionnalités : gestion de la base de données, génération des classements, tâches automatisées, vérification des membres et intégration avec Roblox.\nJ'ai également assuré le déploiement et l'hébergement du bot sur une machine virtuelle Ubuntu via Oracle Cloud Infrastructure (OCI). J'ai utilisé SSH pour l'accès et l'administration à distance du serveur, ainsi que Git pour le contrôle de version et le transfert des mises à jour du projet.",
+          "bullets": [
+            "Développé un bot Discord modulaire en Python (discord.py) pour gérer les profils, statistiques, classements et défis hebdomadaires d'une communauté Roblox de 3 000 membres.",
+            "Déployé et maintenu l'application sur une VM Ubuntu via Oracle Cloud Infrastructure (OCI), avec SSH pour l'administration à distance et Git pour le contrôle de version et le déploiement."
+          ],
+          "skills": [
+            "Python",
+            "discord.py",
+            "Discord API",
+            "Git",
+            "SSH",
+            "Linux",
+            "Ubuntu",
+            "Oracle Cloud Infrastructure",
+            "Gestion de bases de données"
+          ],
+          "context": "Projet personnel"
+        },
         {
           "id": "innovation",
           "title": "Application d'analyse des risques et d'optimisation de portefeuille",
@@ -395,7 +429,9 @@
           "Lua",
           "R",
           "Git",
-          "Docker"
+          "Docker",
+          "SSH",
+          "Bash"
         ]
       },
       {
@@ -424,7 +460,9 @@
           "Software Development",
           "Monte Carlo Simulations",
           "Agent Based Modeling",
-          "SCADA"
+          "SCADA",
+          "Linux",
+          "Ubuntu"
         ]
       }
     ],
@@ -551,6 +589,27 @@
     "projects": {
       "heading": "Projects",
       "items": [
+        {
+          "id": "e-mwmbkrui",
+          "title": "Discord Bot – Community Statistics Management",
+          "body": "I developed a modular Discord bot using Python and discord.py to manage statistics for a Roblox gaming community of approximately 3,000 members. The bot provides features such as individual player profiles, statistical leaderboards, and weekly challenges.\nI structured the application into separate modules to handle its core functionalities, including database management, leaderboard generation, scheduled tasks, member verification, and Roblox-related integrations.\nI also managed the deployment and hosting of the bot on an Ubuntu virtual machine through Oracle Cloud Infrastructure (OCI). I used SSH for remote server access and administration, and Git for version control and transferring project updates to the server.",
+          "bullets": [
+            "Developed a modular Discord bot using Python (discord.py) to manage player profiles, statistics, leaderboards, and weekly challenges for a 3,000-member community.",
+            "Deployed and maintained the application on an Ubuntu VM using Oracle Cloud Infrastructure (OCI), with SSH for remote administration and Git for version control and deployment."
+          ],
+          "skills": [
+            "Python",
+            "discord.py",
+            "Discord API",
+            "Git",
+            "SSH",
+            "Linux",
+            "Ubuntu",
+            "Oracle Cloud Infrastructure",
+            "Database Management"
+          ],
+          "context": "Personal Project"
+        },
         {
           "id": "innovation",
           "title": "Portfolio Risk Analysis & Optimization App",

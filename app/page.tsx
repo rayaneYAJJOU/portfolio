@@ -1,29 +1,30 @@
 "use client";
 
-import { useState } from "react";
-import { content, contact, type Lang } from "./content";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useNavigatorLang, useSearch } from "../lib/clientEnv";
+import { content, contact, type Entry as EntryData, type Lang } from "./content";
 
 function Entry({
   title,
+  role,
+  context,
+  place,
   period,
   body,
   skills,
+  links,
   skillsLabel,
   delay,
-}: {
-  title: string;
-  period?: string;
-  body: string;
-  skills: string[];
-  skillsLabel: string;
-  delay: number;
-}) {
+}: EntryData & { skillsLabel: string; delay: number }) {
+  const sub = [role, context, place].filter(Boolean).join(" · ");
   return (
     <div className="entry reveal" style={{ animationDelay: `${delay}ms` }}>
       <div className="entryHead">
         <h3>{title}</h3>
         {period ? <span className="period">{period}</span> : null}
       </div>
+      {sub ? <p className="entrySub">{sub}</p> : null}
       <p className="entryBody">{body}</p>
       <div className="chipRow" aria-label={skillsLabel}>
         {skills.map((s) => (
@@ -32,13 +33,31 @@ function Entry({
           </span>
         ))}
       </div>
+      {links?.length ? (
+        <p className="entryLinks">
+          {links.map((l) => (
+            <a key={l.href} href={l.href} target="_blank" rel="noreferrer">
+              {l.label}
+            </a>
+          ))}
+        </p>
+      ) : null}
     </div>
   );
 }
 
 export default function Home() {
-  const [lang, setLang] = useState<Lang>("en");
+  // Langue : choix manuel > ?lang=fr|en dans l'URL > langue du navigateur.
+  const [choice, setLang] = useState<Lang | null>(null);
+  const urlLang = new URLSearchParams(useSearch()).get("lang");
+  const navLang = useNavigatorLang();
+  const lang: Lang =
+    choice ?? (urlLang === "fr" || urlLang === "en" ? urlLang : navLang.toLowerCase().startsWith("fr") ? "fr" : "en");
   const t = content[lang];
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
 
   return (
     <div className="shell">
@@ -56,6 +75,14 @@ export default function Home() {
           <h1>{t.name}</h1>
           <p>{t.tagline}</p>
         </div>
+
+        <nav className="sideNav reveal" style={{ animationDelay: "90ms" }} aria-label="Sections">
+          {(["profile", "experience", "education", "projects", "extra", "contact"] as const).map((k) => (
+            <a key={k} href={`#${k}`}>
+              {t.nav[k]}
+            </a>
+          ))}
+        </nav>
 
         <div className="sideBlock reveal" style={{ animationDelay: "120ms" }}>
           <h2>{t.labels.contact}</h2>
@@ -93,11 +120,14 @@ export default function Home() {
 
         <div className="sideBlock reveal" style={{ animationDelay: "170ms" }}>
           <h2>{t.labels.skills}</h2>
-          <ul className="plainList">
-            {t.skills.map((s) => (
-              <li key={s}>{s}</li>
+          <div className="skillGroups">
+            {t.skillGroups.map((g) => (
+              <div key={g.label}>
+                <h3>{g.label}</h3>
+                <p>{g.items.join(", ")}</p>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
 
         <div className="sideBlock reveal" style={{ animationDelay: "210ms" }}>
@@ -136,29 +166,29 @@ export default function Home() {
       </aside>
 
       <main>
-        <section className="section">
+        <section className="section" id="profile">
           <h2 className="reveal">{t.profile.heading}</h2>
           <p className="profileText reveal">{t.profile.body}</p>
         </section>
 
-        <section className="section">
+        <section className="section" id="experience">
           <h2>{t.experience.heading}</h2>
           {t.experience.items.map((item, i) => (
-            <Entry key={item.title} {...item} skillsLabel={t.labels.skillsUsed} delay={i * 40} />
+            <Entry key={item.id} {...item} skillsLabel={t.labels.skillsUsed} delay={i * 40} />
           ))}
         </section>
 
-        <section className="section">
+        <section className="section" id="education">
           <h2>{t.education.heading}</h2>
           {t.education.items.map((item, i) => (
-            <Entry key={item.title} {...item} skillsLabel={t.labels.skillsUsed} delay={i * 40} />
+            <Entry key={item.id} {...item} skillsLabel={t.labels.skillsUsed} delay={i * 40} />
           ))}
         </section>
 
-        <section className="section">
+        <section className="section" id="projects">
           <h2>{t.projects.heading}</h2>
           {t.projects.items.map((item, i) => (
-            <Entry key={item.title} {...item} skillsLabel={t.labels.skillsUsed} delay={i * 30} />
+            <Entry key={item.id} {...item} skillsLabel={t.labels.skillsUsed} delay={i * 30} />
           ))}
           {/*<p className="repoNote">
             {t.labels.moreRepos}:{" "}
@@ -176,10 +206,10 @@ export default function Home() {
           </p>*/}
         </section>
 
-        <section className="section">
+        <section className="section" id="extra">
           <h2>{t.extra.heading}</h2>
           {t.extra.items.map((item, i) => (
-            <Entry key={item.title} {...item} skillsLabel={t.labels.skillsUsed} delay={i * 30} />
+            <Entry key={item.id} {...item} skillsLabel={t.labels.skillsUsed} delay={i * 30} />
           ))}
         </section>
 
@@ -208,13 +238,16 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="footer">
+        <section className="footer" id="contact">
           <h2>{t.footer.heading}</h2>
           <p>{t.footer.body}</p>
           <div className="ctaRow">
             <a className="cta" href={`mailto:${contact.email}`}>
               {contact.email}
             </a>
+            <Link className="cta ghost" href={`/cv/?view&lang=${lang}`}>
+              CV
+            </Link>
             <a className="cta ghost" href={contact.linkedin} target="_blank" rel="noreferrer">
               LinkedIn
             </a>
@@ -222,7 +255,7 @@ export default function Home() {
               GitHub
             </a>
           </div>
-          <p className="finePrint">Kénitra, Morocco — {new Date().getFullYear()}</p>
+          <p className="finePrint">Kénitra, Morocco</p>
         </section>
       </main>
     </div>

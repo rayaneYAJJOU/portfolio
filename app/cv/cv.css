@@ -1,0 +1,114 @@
+/* ───────── Outil CV : panneau (thème du site) + feuille A4 (ATS-safe) ───────── */
+
+.cvTool {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: clamp(20px, 4vw, 48px) var(--gutter);
+  display: grid;
+  grid-template-columns: minmax(300px, 400px) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 48px);
+  align-items: start;
+}
+@media (max-width: 980px) {
+  .cvTool { grid-template-columns: 1fr; }
+}
+
+.cvTool .panel { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 24px; max-height: calc(100vh - 48px); overflow: auto; padding-right: 6px; }
+@media (max-width: 980px) { .cvTool .panel { position: static; max-height: none; overflow: visible; } }
+.cvTool .panel h1 { font-family: var(--font-mono); font-weight: 500; font-size: 20px; margin: 0; }
+.cvTool .panel h2 { font-family: var(--font-mono); font-weight: 500; font-size: 14px; margin: 0 0 8px; color: var(--accent); }
+.cvTool .panel h3 { font-family: var(--font-mono); font-weight: 500; font-size: 12px; margin: 14px 0 6px; color: var(--text-muted); }
+.cvTool .back { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); text-decoration: none; }
+.cvTool .back:hover { color: var(--accent); }
+.cvTool .hint { color: var(--text-muted); font-size: 15px; margin: 0; }
+.cvTool .hint.small { font-size: 13.5px; }
+.cvTool code { font-family: var(--font-mono); font-size: 12px; color: var(--accent); }
+
+.cvTool .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; flex: 1; }
+.cvTool .field > span { font-family: var(--font-mono); font-size: 11.5px; color: var(--text-muted); }
+.cvTool .fieldRow { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+.cvTool input[type="text"], .cvTool input:not([type]), .cvTool textarea {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 9px 10px;
+  width: 100%;
+  resize: vertical;
+}
+.cvTool input[type="range"] { accent-color: var(--accent); width: 100%; }
+.cvTool :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.cvTool .check { display: flex; gap: 8px; align-items: center; font-size: 15px; color: var(--text-muted); }
+.cvTool .check input { accent-color: var(--accent); }
+.cvTool details { border: 1px solid var(--line-soft); border-radius: 3px; padding: 8px 10px; }
+.cvTool summary { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); cursor: pointer; }
+.cvTool details textarea { margin-top: 8px; }
+
+.cvTool .sampleRow { display: flex; gap: 8px; margin-top: -6px; }
+.cvTool .sampleRow button {
+  background: none; border: none; padding: 0; cursor: pointer;
+  font-family: var(--font-mono); font-size: 11.5px; color: var(--text-faint); text-decoration: underline;
+}
+.cvTool .sampleRow button:hover { color: var(--accent); }
+
+.cvTool .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.cvTool button.cta { background: transparent; cursor: pointer; }
+.cvTool button.cta:not(.ghost) { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.cvTool button.cta:disabled { opacity: 0.5; cursor: progress; }
+
+.cvTool .report { border-top: 1px solid var(--line); padding-top: 16px; }
+.cvTool .warn { margin: 0 0 8px; padding: 8px 10px; border-left: 2px solid var(--accent); background: var(--accent-soft); font-size: 14.5px; }
+.cvTool .meter { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; margin: 6px 0 8px; }
+.cvTool .meter div { height: 100%; background: var(--accent); }
+.cvTool .chip.ok { color: var(--text); border-color: var(--accent-dim); }
+.cvTool .chip.gap { color: var(--text-faint); border-style: dashed; }
+
+.cvTool .radar { margin: 0 0 10px; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; }
+.cvTool .radar li::marker { color: var(--accent); font-family: var(--font-mono); font-size: 12px; }
+
+.cvTool .stage { min-width: 0; overflow-x: auto; }
+.cvTool.viewOnly { grid-template-columns: 1fr; justify-items: center; }
+.cvTool .viewBar { position: static; flex-direction: row; align-items: center; flex-wrap: wrap; max-height: none; }
+
+/* La feuille : fond blanc, police système standard, une seule colonne. */
+.paper {
+  background: #fff;
+  color: #111;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 9pt;
+  line-height: 1.22;
+  width: 210mm;
+  max-width: 100%;
+  min-height: 297mm;
+  padding: 10mm 13mm;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+  margin: 0 auto;
+}
+.paper h1 { font-size: 17pt; text-align: center; margin: 0 0 2pt; font-weight: 700; }
+.paper h2 {
+  font-size: 10pt; text-transform: uppercase; font-weight: 700;
+  border-bottom: 1.2pt solid #444; margin: 6pt 0 2.5pt; padding-bottom: 1pt;
+}
+.paper p { margin: 0; }
+.paper .pHeadline { text-align: center; font-weight: 700; font-size: 10pt; }
+.paper .pContact, .paper .pAvail { text-align: center; }
+.paper .pAvail { font-style: italic; }
+.paper a { color: #111; text-decoration: underline; }
+.paper .pEntry { margin-top: 2.5pt; break-inside: avoid; }
+.paper .pRow { display: flex; justify-content: space-between; gap: 12pt; font-weight: 700; }
+.paper .pPeriod { font-weight: 400; white-space: nowrap; }
+.paper .pSub { font-style: italic; }
+.paper ul { margin: 1pt 0 0; padding-left: 13pt; }
+.paper li { margin: 0 0 1pt; }
+
+@media print {
+  @page { size: A4; margin: 0; }
+  html, body { background: #fff !important; }
+  body { background-image: none !important; }
+  .cvTool { display: block; padding: 0; max-width: none; }
+  .cvTool .panel { display: none !important; }
+  .cvTool .stage { overflow: visible; }
+  .paper { box-shadow: none; width: 210mm; min-height: 0; margin: 0; }
+}

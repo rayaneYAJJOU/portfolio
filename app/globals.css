@@ -469,3 +469,69 @@ main {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+
+/* ---------- additions : nav latérale, sous-titres, groupes de compétences ---------- */
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 24px;
+}
+
+.sideNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.sideNav a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.sideNav a:hover,
+.sideNav a:focus-visible {
+  color: var(--accent);
+}
+
+.entrySub {
+  margin: 2px 0 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.entryLinks {
+  display: flex;
+  gap: 14px;
+  margin: 10px 0 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.entryLinks a {
+  color: var(--accent);
+}
+
+.skillGroups {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.skillGroups h3 {
+  margin: 0 0 2px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+.skillGroups p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

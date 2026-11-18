@@ -1,0 +1,21 @@
+// Idées de mini-projets pour combler un écart récurrent (suggestions, pas des affirmations pour le CV).
+export const IDEAS: Record<string, string> = {
+  docker: "Conteneuriser une de tes apps (Streamlit ou Next.js) avec un Dockerfile et le publier sur GitHub.",
+  git: "Travailler un projet avec branches et pull requests, même seul, et le dire dans le README.",
+  "ci/cd": "Ajouter des tests et un workflow GitHub Actions (tu en as déjà un pour le déploiement de ce site).",
+  "scikit-learn": "Refaire le projet de fraude avec un Pipeline scikit-learn (prétraitement, validation croisée, métriques).",
+  statistics: "Ajouter à un projet existant des intervalles de confiance et des tests statistiques.",
+  fastapi: "Exposer un de tes modèles via une API FastAPI de 2 routes.",
+  "rest api": "Exposer un de tes modèles via une API REST minimale et la documenter.",
+  postgresql: "Stocker les données d'un projet dans PostgreSQL et écrire 5 requêtes d'analyse.",
+  sql: "Refaire une analyse de pandas en SQL pur sur SQLite ou PostgreSQL.",
+  aws: "Déployer une petite app ou un notebook sur une offre gratuite cloud et documenter les étapes.",
+  spark: "Traiter un gros fichier avec PySpark en local et comparer le temps avec pandas.",
+  "power bi": "Construire un tableau de bord de KPIs à partir des données d'un de tes projets.",
+  tableau: "Construire un tableau de bord de KPIs à partir des données d'un de tes projets.",
+  nlp: "Petit projet de classification de texte avec Hugging Face, déjà dans ton stack.",
+  llm: "Petite application qui interroge un LLM via API avec évaluation simple des réponses.",
+  "node.js": "Écrire une API Node minimale (2 routes) avec tests.",
+  "data engineering": "Construire un pipeline de nettoyage reproductible (script + tests) sur un jeu Kaggle.",
+  kubernetes: "Notions seulement : à ne viser que si l'offre l'exige vraiment.",
+};

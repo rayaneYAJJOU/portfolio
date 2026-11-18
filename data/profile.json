@@ -33,18 +33,12 @@
         "label": "Programmation ",
         "items": [
           "Python",
+          "Lua",
           "C",
           "SQL",
           "TypeScript",
-          "Lua",
           "R",
-          "Git",
-          "Docker",
-          "SSH",
-          "Bash",
-          "Linux",
-          "Ubuntu",
-          "Cloud"
+          "Bash"
         ]
       },
       {
@@ -52,6 +46,7 @@
         "items": [
           "NumPy",
           "Pandas",
+          "SQLite",
           "Scikit-learn",
           "PyTorch",
           "TensorFlow",
@@ -69,11 +64,14 @@
           "React",
           "Streamlit",
           "PyQt5",
-          "OOP",
-          "Développement logiciel",
-          "Simulations Monte Carlo",
-          "Modélisation multi-agents",
-          "SCADA"
+          "Git",
+          "GitHub Actions (CI/CD)",
+          "Docker",
+          "SSH",
+          "Linux (Ubuntu)",
+          "Oracle Cloud Infrastructure (OCI)",
+          "Simulation Monte Carlo",
+          "Modélisation multi-agents"
         ]
       }
     ],
@@ -424,18 +422,12 @@
         "label": "Programming",
         "items": [
           "Python",
+          "Lua",
           "C",
           "SQL",
           "TypeScript",
-          "Lua",
           "R",
-          "Git",
-          "Docker",
-          "SSH",
-          "Bash",
-          "Linux",
-          "Ubuntu",
-          "Cloud"
+          "Bash"
         ]
       },
       {
@@ -443,6 +435,7 @@
         "items": [
           "NumPy",
           "Pandas",
+          "SQLite",
           "Scikit-learn",
           "PyTorch",
           "TensorFlow",
@@ -460,11 +453,14 @@
           "React",
           "Streamlit",
           "PyQt5",
-          "OOP",
-          "Software Development",
-          "Monte Carlo Simulations",
-          "Agent Based Modeling",
-          "SCADA"
+          "Git",
+          "GitHub Actions (CI/CD)",
+          "Docker",
+          "SSH",
+          "Linux (Ubuntu)",
+          "Oracle Cloud Infrastructure (OCI)",
+          "Monte Carlo Simulation",
+          "Agent Based Modeling"
         ]
       }
     ],

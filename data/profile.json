@@ -84,14 +84,6 @@
         ]
       },
       {
-        "label": "Modélisation & Finance",
-        "items": [
-          "Optimisation de portefeuille (Markowitz, Black-Litterman)",
-          "Simulation Monte Carlo",
-          "Modélisation multi-agent"
-        ]
-      },
-      {
         "label": "Développement",
         "items": [
           "Développement web",
@@ -104,19 +96,18 @@
         ]
       },
       {
-        "label": "Systèmes industriels",
+        "label": "Autre",
         "items": [
+          "Optimisation de portefeuille (Markowitz",
+          "Black-Litterman)",
+          "Simulation Monte Carlo",
+          "Modélisation multi-agent",
+          "Réseaux Télécoms",
+          "Cybersécurité",
           "SCADA",
           "GMAO",
           "KPIs",
           "Maintenance prédictive"
-        ]
-      },
-      {
-        "label": "Réseaux & Sécurité",
-        "items": [
-          "Réseaux Télécoms",
-          "Cybersécurité"
         ]
       }
     ],

@@ -30,77 +30,37 @@
     },
     "skillGroups": [
       {
-        "label": "Langages",
+        "label": "Programmation ",
         "items": [
           "Python",
           "C",
+          "SQL",
+          "TypeScript",
           "Lua",
           "R",
-          "SQL",
-          "JavaScript",
-          "TypeScript"
-        ]
-      },
-      {
-        "label": "IA & Machine Learning",
-        "items": [
-          "U-Net",
-          "Vision par ordinateur",
-          "Gradient Boosting",
-          "Random Forest",
-          "SMOTE",
-          "SHAP",
-          "PCA",
-          "Détection d'anomalies",
-          "Transport optimal",
-          "AutoML (ANAI)",
-          "Hugging Face Transformers"
-        ]
-      },
-      {
-        "label": "Bibliothèques & outils Python",
-        "items": [
-          "PyTorch",
-          "TensorFlow",
-          "pandas",
-          "NumPy",
-          "SciPy",
-          "matplotlib",
-          "Seaborn",
-          "Plotly",
-          "Streamlit",
-          "PyQt5",
-          "Pygame",
-          "Pymunk",
-          "scikit-optimize",
-          "Jupyter / Colab"
-        ]
-      },
-      {
-        "label": "Développement",
-        "items": [
-          "Développement web",
-          "React",
-          "Développement logiciel",
-          "Programmation orientée objet",
-          "Développement jeux-vidéo",
           "Git",
           "Docker"
         ]
       },
       {
-        "label": "Autre",
+        "label": "Data & IA",
         "items": [
-          "Optimisation de portefeuille",
-          "Simulation Monte Carlo",
-          "Modélisation multi-agent",
-          "Réseaux Télécoms",
-          "Cybersécurité",
-          "SCADA",
-          "GMAO",
-          "KPIs",
-          "Maintenance prédictive"
+          "NumPy",
+          "Pandas",
+          "Scikit-learn",
+          "PyTorch",
+          "TensorFlow",
+          "Machine Learning",
+          "Deep Learning",
+          "Computer Vision",
+          "NLP",
+          "Data Analysis",
+          "Optimization"
         ]
+      },
+      {
+        "label": "Développement & Modélisation",
+        "items": []
       }
     ],
     "learning": [],
@@ -426,81 +386,45 @@
     },
     "skillGroups": [
       {
-        "label": "Languages",
+        "label": "Programming",
         "items": [
           "Python",
           "C",
+          "SQL",
+          "TypeScript",
           "Lua",
           "R",
-          "SQL",
-          "JavaScript",
-          "TypeScript"
-        ]
-      },
-      {
-        "label": "AI & Machine Learning",
-        "items": [
-          "U-Net",
-          "Computer Vision",
-          "Gradient Boosting",
-          "Random Forest",
-          "SMOTE",
-          "SHAP",
-          "PCA",
-          "Anomaly Detection",
-          "Optimal Transport",
-          "AutoML (ANAI)",
-          "Hugging Face Transformers"
-        ]
-      },
-      {
-        "label": "Python Libraries & Tools",
-        "items": [
-          "PyTorch",
-          "TensorFlow",
-          "pandas",
-          "NumPy",
-          "SciPy",
-          "Matplotlib",
-          "Seaborn",
-          "Plotly",
-          "Streamlit",
-          "PyQt5",
-          "Pygame",
-          "Pymunk",
-          "scikit-optimize",
-          "Jupyter / Colab"
-        ]
-      },
-      {
-        "label": "Development",
-        "items": [
-          "Web Development",
-          "React",
-          "Software Development",
-          "Object-Oriented Programming",
-          "Video Game Development",
           "Git",
           "Docker"
         ]
       },
       {
-        "label": "Networks & Security",
+        "label": "Data & AI",
         "items": [
-          "Telecom Networks",
-          "Cybersecurity"
+          "NumPy",
+          "Pandas",
+          "Scikit-learn",
+          "PyTorch",
+          "TensorFlow",
+          "Machine Learning",
+          "Deep Learning",
+          "Computer Vision",
+          "NLP",
+          "Data Analysis",
+          "Optimization"
         ]
       },
       {
-        "label": "Other",
+        "label": "Development & Modeling",
         "items": [
-          "Portfolio Optimization",
-          "Monte Carlo Simulation",
-          "Agent-Based Modeling",
-          "SCADA",
-          "CMMS",
-          "KPIs",
-          "Predictive Maintenance"
+          "React",
+          "Streamlit",
+          "PyQt5",
+          "OOP",
+          "Software Development",
+          "Monte Carlo Simulations",
+          "Agent Based Modeling",
+          "SCADA"
         ]
       }
     ],

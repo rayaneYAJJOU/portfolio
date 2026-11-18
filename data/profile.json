@@ -220,7 +220,8 @@
             "Réseaux Télécoms",
             "Cybersécurité",
             "Python",
-            "R"
+            "R",
+            "Docker"
           ]
         },
         {
@@ -278,8 +279,8 @@
           "context": "Projet Scientifique",
           "body": "J'ai créé un modèle de machine learning dans le contexte de la maintenance prédictive, en utilisant la théorie du transport optimal pour trouver un seuil qui détermine l'état d'une machine.",
           "bullets": [
-            "Appliqué un algorithme de transport optimal pour détecter des anomalies à partir d'un seuil, sur une base de télémétrie de machine (Kaggle).",
-            "Entraîné des modèles de machine learning pour la maintenance prédictive (XGBoost, LightGBM, gradient boosting, random forest, bibliothèque AutoML ANAI) dans un notebook Colab."
+            "Appliqué un algorithme de transport optimal pour détecter des anomalies à partir d'un seuil, sur une base de télémétrie de machine (Kaggle) \"Microsoft Azure Predictive Maintenance\".",
+            "Entraîné des modèles de machine learning pour la maintenance prédictive (XGBoost, LightGBM, gradient boosting, random forest, bibliothèque AutoML ANAI) dans un notebook Colab, obtenant un F1-score de 92% pour la détection d'anomalies."
           ],
           "skills": [
             "Python",
@@ -302,7 +303,7 @@
           "context": "Projet Learning by Doing",
           "body": "J'ai développé un modèle d'apprentissage automatique visant à évaluer le niveau de compétence des étudiants, ainsi qu'un site web servant d'interface graphique pour les différents cas d'utilisation.",
           "bullets": [
-            "Développé un modèle de machine learning (XGBoost, LightGBM, random forest) évaluant le niveau de compétence des étudiants, sur un jeu de données partiellement généré faute de données réelles.",
+            "Développé un modèle de machine learning (XGBoost, LightGBM, random forest) évaluant le niveau de compétence des étudiants, atteignant une accuracy de 92% sur un jeu de données partiellement généré faute de données réelles.",
             "Réalisé l'interface web (React, TypeScript) couvrant les différents cas d'utilisation."
           ],
           "skills": [
@@ -343,7 +344,7 @@
           "body": "J'ai participé à un événement au cours duquel j'ai développé des modèles à base d'arbres (arbre de décision, random forest, gradient boosting, XGBoost, LightGBM) pour détecter les fraudes dans des transactions bancaires, en traitant le déséquilibre des classes (SMOTE-Tomek) et en interprétant les modèles avec SHAP. Cet exercice m'a permis d'acquérir une compréhension pratique des concepts fondamentaux de l'apprentissage automatique.",
           "bullets": [
             "Développé des modèles de classification à base d'arbres (arbre de décision, random forest, gradient boosting, XGBoost, LightGBM) pour détecter la fraude dans des transactions bancaires.",
-            "Traité le déséquilibre des classes (SMOTE-Tomek), réduit la dimension par PCA et interprété les modèles avec SHAP."
+            "Traité le déséquilibre des classes (SMOTE-Tomek), réduit la dimension par PCA et interprété les modèles avec SHAP, sur un dataset de plus de 100 millions transactions, obtenant un ROC-AUC de 98%."
           ],
           "skills": [
             "Python",
@@ -632,7 +633,8 @@
             "Telecom Networks",
             "Cybersecurity",
             "Python",
-            "R"
+            "R",
+            "Docker"
           ]
         },
         {
@@ -690,8 +692,8 @@
           "context": "Scientific Project",
           "body": "I built a machine learning model for predictive maintenance, using optimal transport theory to find a threshold that determines a machine's health state.",
           "bullets": [
-            "Applied an optimal transport algorithm to detect anomalies from a threshold, on a machine telemetry dataset (Kaggle).",
-            "Trained machine learning models for predictive maintenance (XGBoost, LightGBM, gradient boosting, random forest, ANAI AutoML library) in a Colab notebook."
+            "Applied an optimal transport algorithm to detect anomalies from a threshold, on a machine telemetry dataset (Kaggle) \"Microsoft Azure Predictive Maintenance\".",
+            "Trained machine learning models for predictive maintenance (XGBoost, LightGBM, gradient boosting, random forest, ANAI AutoML library) in a Colab notebook, getting an F1-score of 92% for anomaly detection."
           ],
           "skills": [
             "Python",
@@ -714,7 +716,7 @@
           "context": "Learning by Doing Project",
           "body": "I developed a machine learning model to assess students' skill level, along with a website serving as the graphical interface for the different use cases.",
           "bullets": [
-            "Developed a machine learning model (XGBoost, LightGBM, random forest) assessing students' skill level, on a partially generated dataset due to the lack of real data.",
+            "Developed a machine learning model (XGBoost, LightGBM, random forest) assessing students' skill level, obtaining 92% accuracy on a partially generated dataset due to the lack of real data.",
             "Built the web interface (React, TypeScript) covering the different use cases."
           ],
           "skills": [
@@ -754,8 +756,7 @@
           "context": "Coding Week",
           "body": "I took part in an event where I built tree-based models (decision tree, random forest, gradient boosting, XGBoost, LightGBM) to detect fraud in banking transactions, handling class imbalance (SMOTE-Tomek) and interpreting the models with SHAP — a hands-on introduction to core machine learning concepts.",
           "bullets": [
-            "Developed tree-based classification models (decision tree, random forest, gradient boosting, XGBoost, LightGBM) to detect fraud in banking transactions.",
-            "Handled class imbalance (SMOTE-Tomek), reduced dimensionality with PCA and interpreted the models with SHAP."
+            "Developed tree-based classification models (Decision Tree, Random Forest, Gradient Boosting, XGBoost, LightGBM) to detect fraudulent banking transactions. Addressed class imbalance using SMOTE-Tomek, applied dimensionality reduction via PCA, and interpreted model predictions with SHAP across a dataset of over 100 million transactions, achieving a 98% ROC-AUC."
           ],
           "skills": [
             "Python",

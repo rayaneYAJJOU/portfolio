@@ -9,6 +9,8 @@ export const KEYS = {
   cv: "cv-tailor:v1",
   offers: "cv-tailor:offers:v1",
   advice: "advice:v1",
+  style: "letter:style:v1", // tes textes de référence + guide de style (non secrets, en clair)
+  letter: "letter:draft:v1", // dernier brouillon de lettre
   ai: "ai:status:v1",
 } as const;
 

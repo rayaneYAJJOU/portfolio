@@ -7,14 +7,16 @@ import { KEYS, notify, useLocal, useProfile, writeStore } from "../../lib/owner"
 import { aiAdvise, aiExtractOffer, aiRewrite, type OfferMemo } from "../../lib/ai";
 import { checkRewrite } from "../../lib/guard";
 import { META, useAiStatus, useNow } from "../../lib/providers";
-import { unlockVault, useVault } from "../../lib/vault";
+import { useVault } from "../../lib/vault";
 import type { Lang } from "../content";
-import { cleanRole, detectLang, fitProjects, tailor, type CV, type CVEntry } from "../../lib/tailor";
+import { cleanRole, contactLines, detectLang, fitProjects, tailor, type CV, type CVEntry } from "../../lib/tailor";
 import { cvToText } from "../../lib/cvText";
 import { buildPrompt } from "../../lib/prompt";
 import { IDEAS } from "../../lib/roadmap";
 import { labelFor } from "../../lib/taxonomy";
 import { SAMPLES } from "../../lib/samples";
+import { AdviceView } from "./AdviceView";
+import { UnlockBar } from "./UnlockBar";
 import "./cv.css";
 
 const STORE = KEYS.cv;
@@ -33,22 +35,6 @@ function decodeImport(hash: string): { x: string; t?: string; u?: string } | nul
   } catch {
     return null;
   }
-}
-
-function UnlockBar() {
-  const [pass, setPass] = useState("");
-  const [err, setErr] = useState("");
-  const go = async () => {
-    setErr("");
-    try { await unlockVault(pass); } catch (e) { setErr(e instanceof Error ? e.message : String(e)); }
-  };
-  return (
-    <div className="panel viewBar unlock">
-      <input type="password" placeholder="Phrase secrète" value={pass} onChange={(e) => setPass(e.target.value)} onKeyDown={(e) => e.key === "Enter" && go()} aria-label="Phrase secrète" />
-      <button className="cta" onClick={go} disabled={!pass}>Déverrouiller</button>
-      {err ? <span className="hint small">{err}</span> : null}
-    </div>
-  );
 }
 
 const fileToBase64 = (f: File) =>
@@ -100,14 +86,16 @@ function Paper({ cv }: { cv: CV }) {
     <article className="paper" lang={cv.lang}>
       <h1>{cv.name}</h1>
       <p className="pHeadline">{cv.headline}</p>
-      <p className="pContact">
-        {cv.contact.map((c, i) => (
-          <span key={c.text}>
-            {i ? "  |  " : ""}
-            {c.href && !c.href.startsWith("tel:") ? <a href={c.href}>{c.text}</a> : c.text}
-          </span>
-        ))}
-      </p>
+      {contactLines(cv).map((line, n) => (
+        <p className="pContact" key={n}>
+          {line.map((c, i) => (
+            <span key={c.text}>
+              {i ? " | " : ""}
+              {c.href && !c.href.startsWith("tel:") ? <a href={c.href}>{c.text}</a> : c.text}
+            </span>
+          ))}
+        </p>
+      ))}
       <p className="pAvail">{cv.availability}</p>
       <section>
         <h2>{cv.labels.summary}</h2>
@@ -236,7 +224,9 @@ export default function CvPage() {
 
   const fileBase = `Rayane_Yajjou_CV_${(company || effRole || "general").replace(/[^\p{L}\p{N}]+/gu, "_").replace(/^_|_$/g, "")}_${effLang.toUpperCase()}`;
 
-  const printPdf = () => {
+  const printPdf = async () => {
+    // Impression seulement quand la police du CV est chargée : sinon le PDF serait rendu avec une police de remplacement.
+    try { await Promise.all(["400", "700", "italic 400"].map((w) => document.fonts.load(`${w} 9pt "CV Sans"`))); await document.fonts.ready; } catch {}
     const prev = document.title;
     document.title = fileBase; // nom de fichier proposé par le navigateur
     const restore = () => { document.title = prev; window.removeEventListener("afterprint", restore); };
@@ -405,6 +395,7 @@ export default function CvPage() {
           <button className="cta ghost" onClick={downloadDocx} disabled={busy}>DOCX</button>
           <button className="cta ghost" onClick={copyText}>{copied ? "Copié ✓" : "Copier le texte"}</button>
           <button className="cta ghost" onClick={copyPrompt} disabled={!jd.trim()}>{copiedPrompt ? "Copié ✓" : "Prompt pour Claude"}</button>
+          <Link className="cta ghost" href="/cv/letter/">Lettre de motivation →</Link>
         </div>
         <p className="hint small">PDF : dans la fenêtre d&apos;impression choisis « Enregistrer au format PDF ». Le texte reste sélectionnable, donc lisible par les ATS.</p>
 
@@ -438,7 +429,7 @@ export default function CvPage() {
               <ul>{aiIssues.map((i) => <li key={i}>{i}</li>)}</ul>
             </div>
           ) : overrides ? <p className="ok">Contrôle : aucun outil ni chiffre ajouté par rapport à ton profil.</p> : null}
-          {advice ? <div className="advice">{advice}</div> : null}
+          {advice ? <AdviceView text={advice} onClear={() => writeStore(KEYS.advice, null)} /> : null}
         </section>
 
         <section className="report" aria-live="polite">

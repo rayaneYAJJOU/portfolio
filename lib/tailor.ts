@@ -307,3 +307,9 @@ export function estimateLines(cv: CV): number {
   }
   return n + 3;
 }
+
+/** Coordonnées sur deux lignes fixes (e-mail, téléphone, lieu / puis liens LinkedIn, GitHub) : jamais de « | » orphelin en fin de ligne. */
+export function contactLines(cv: CV): CV["contact"][] {
+  const isLink = (c: { href?: string }) => !!c.href && /^https?:/.test(c.href);
+  return [cv.contact.filter((c) => !isLink(c)), cv.contact.filter(isLink)].filter((l) => l.length);
+}

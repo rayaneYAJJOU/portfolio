@@ -4,10 +4,11 @@ import { ownedKeys } from "./tailor";
 import type { Data } from "./owner";
 
 // Garde-fou : un texte produit par le modèle ne doit rien introduire qui ne soit dans ton profil.
-export function checkRewrite(texts: string[], data: Data, lang: Lang): string[] {
+/** `context` : texte déjà fourni au modèle (ex. l'offre) dont les nombres ne comptent pas comme inventés. */
+export function checkRewrite(texts: string[], data: Data, lang: Lang, context = ""): string[] {
   const p = data[lang];
   const owned = ownedKeys(p);
-  const original = JSON.stringify(p);
+  const original = `${JSON.stringify(p)} ${context}`;
   const issues: string[] = [];
   const all = texts.join("\n");
 

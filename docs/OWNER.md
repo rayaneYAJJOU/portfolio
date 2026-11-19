@@ -50,6 +50,8 @@ Fournisseurs pris en charge : Google Gemini, Groq, OpenRouter, Mistral, Anthropi
   et le suivant est essayé. Il est réessayé tout seul après la pause ; « Réinitialiser les pauses » force.
 - **Manuel** : tu choisis un fournisseur (liste dans `/cv/` ou `/admin/`) ; il est utilisé jusqu'à sa limite, avec un message clair, puis tu en choisis un autre.
 - Les **images** (capture d'offre) ne partent que vers les fournisseurs qui les lisent (Gemini, Claude, OpenAI).
+- **Que dois-je améliorer ?** s'affiche mis en forme (titres, listes, tableaux) avec **Copier** (collage avec mise en forme dans Word, Docs, Notion) et **Copier en Markdown**.
+- La **lettre de motivation** (`/cv/letter/`) utilise aussi ce mécanisme.
 - **Reformuler pour cette offre** et **Que dois-je améliorer ?** utilisent ce mécanisme. Le garde-fou signale tout outil absent de ton profil,
   tout chiffre nouveau et tout « À COMPLÉTER » ; il vaut pour tous les fournisseurs. Le dernier fournisseur utilisé et les pauses sont affichés.
 

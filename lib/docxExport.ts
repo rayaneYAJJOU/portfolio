@@ -2,7 +2,7 @@ import {
   AlignmentType, BorderStyle, Document, ExternalHyperlink, HeadingLevel, LevelFormat,
   Paragraph, Tab, TabStopType, TextRun,
 } from "docx";
-import type { CV, CVEntry } from "./tailor";
+import { contactLines as contactGroups, type CV, type CVEntry } from "./tailor";
 
 // DOCX volontairement simple pour les ATS : une colonne, vrais styles de titre,
 // puces natives, police standard, aucune table ni image ni zone de texte.
@@ -17,17 +17,19 @@ const BODY = 18; // 9 pt
 const run = (text: string, o: { bold?: boolean; italics?: boolean; size?: number; color?: string } = {}) =>
   new TextRun({ text, font: FONT, size: o.size ?? BODY, bold: o.bold, italics: o.italics, color: o.color });
 
-function contactLine(cv: CV): Paragraph {
-  const kids: (TextRun | ExternalHyperlink)[] = [];
-  cv.contact.forEach((c, i) => {
-    if (i) kids.push(run("  |  "));
-    kids.push(
-      c.href && !c.href.startsWith("tel:")
-        ? new ExternalHyperlink({ link: c.href, children: [new TextRun({ text: c.text, font: FONT, size: BODY, style: "Hyperlink" })] })
-        : run(c.text),
-    );
+function contactLines(cv: CV): Paragraph[] {
+  return contactGroups(cv).map((group) => {
+    const kids: (TextRun | ExternalHyperlink)[] = [];
+    group.forEach((c, i) => {
+      if (i) kids.push(run("  |  "));
+      kids.push(
+        c.href && !c.href.startsWith("tel:")
+          ? new ExternalHyperlink({ link: c.href, children: [new TextRun({ text: c.text, font: FONT, size: BODY, style: "Hyperlink" })] })
+          : run(c.text),
+      );
+    });
+    return new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 40 }, children: kids });
   });
-  return new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 40 }, children: kids });
 }
 
 function heading(text: string): Paragraph {
@@ -64,7 +66,7 @@ export function buildDocx(cv: CV): Document {
   const children: Paragraph[] = [
     new Paragraph({ heading: HeadingLevel.TITLE, alignment: AlignmentType.CENTER, children: [new TextRun({ text: cv.name, font: FONT })] }),
     new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 20 }, children: [run(cv.headline, { bold: true, size: 20 })] }),
-    contactLine(cv),
+    ...contactLines(cv),
     new Paragraph({ alignment: AlignmentType.CENTER, children: [run(cv.availability, { italics: true })] }),
     heading(cv.labels.summary),
     new Paragraph({ spacing: { after: 20 }, children: [run(cv.summary)] }),

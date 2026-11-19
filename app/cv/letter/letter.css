@@ -1,0 +1,22 @@
+/* Page lettre de motivation : réutilise la grille et le panneau de cv.css */
+.letterTool .letterStage { display: flex; flex-direction: column; gap: 14px; }
+.letterTool .letterHead { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.letterTool .letterHead h2 { font-family: var(--font-mono); font-weight: 500; font-size: 14px; margin: 0; color: var(--accent); }
+.letterTool .letterText {
+  width: 100%;
+  min-height: 520px;
+  resize: vertical;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  color: var(--text);
+  font-family: var(--font-serif);
+  font-size: 17px;
+  line-height: 1.65;
+  padding: 22px 26px;
+}
+.letterTool .checks { border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+.letterTool .checks h3 { font-family: var(--font-mono); font-weight: 500; font-size: 12px; margin: 6px 0 0; color: var(--text-muted); }
+.letterTool .checks .warn, .letterTool .checks .ok { margin: 0; }
+.letterTool .hint a { color: var(--accent); }
+.letterTool details > * + * { margin-top: 10px; }

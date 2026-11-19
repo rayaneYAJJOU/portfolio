@@ -88,3 +88,17 @@ résumé retouché dans « Remplacer le résumé ».
 - **En cours d'apprentissage** : une compétence que tu apprends vraiment (et pour laquelle tu as déjà commencé
   un mini-projet) peut être ajoutée à `learning: []` dans ton profil (`/admin/`). Elle n'apparaît sur le CV que si
   l'offre la demande, sous l'intitulé « En cours d'apprentissage », jamais mélangée aux compétences acquises.
+
+## Lettre de motivation sans cliché (`/cv/letter/`)
+
+Bouton « Lettre de motivation → » dans `/cv/` : la page reprend l'offre, l'entreprise et l'intitulé déjà saisis.
+
+- **Ta voix** : colle 1 à 3 textes que tu as vraiment écrits (FR et/ou EN), puis « Extraire mon style ». Le guide obtenu est modifiable ;
+  il guide le rythme, le registre et la ponctuation. Les textes sont gardés dans ce navigateur (en clair) et envoyés au fournisseur d'IA à chaque génération.
+- **Ta vraie raison** (champ facultatif) : c'est la seule motivation que la lettre peut exprimer. Sans elle, la lettre parle d'adéquation
+  entre les missions et ton parcours, et n'invente aucune passion pour l'entreprise.
+- **Garde-fous** : chaque fait vient de ton profil ; le garde-fou signale outils ou chiffres absents du profil ; le détecteur (`lib/slop.ts`)
+  repère les formules toutes faites FR/EN (« fort de », « I am thrilled »…), tirets cadratins, « ! », « Je » en rafale, longueur. Une passe de
+  correction automatique est lancée si besoin ; le contrôle se met à jour pendant que tu retouches le texte.
+- **Sans clé d'API** : « Copier le prompt » donne un prompt complet pour Claude ou ChatGPT ; colle la réponse dans la page pour la faire contrôler.
+- Export : copier, ou DOCX (bloc expéditeur, date, destinataire). Pour ajouter une formule à bannir : une ligne dans `lib/slop.ts`.

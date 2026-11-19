@@ -1,3 +1,10 @@
+/* Police du CV embarquée (Liberation Sans, métriquement identique à Arial) : le PDF est le même sur toutes les machines,
+   sans dépendre de l'Arial ou du Helvetica installés, et sans gras/italique synthétisés. */
+@font-face { font-family: "CV Sans"; src: url("./fonts/cv-sans-regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "CV Sans"; src: url("./fonts/cv-sans-bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
+@font-face { font-family: "CV Sans"; src: url("./fonts/cv-sans-italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+@font-face { font-family: "CV Sans"; src: url("./fonts/cv-sans-bolditalic.woff2") format("woff2"); font-weight: 700; font-style: italic; font-display: block; }
+
 /* ───────── Outil CV : panneau (thème du site) + feuille A4 (ATS-safe) ───────── */
 
 .cvTool {
@@ -76,7 +83,12 @@
 .paper {
   background: #fff;
   color: #111;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "CV Sans", Arial, Helvetica, sans-serif;
+  font-synthesis: none; /* jamais de gras ou d'italique fabriqués */
+  font-variant-ligatures: none; /* « fi », « fl » restent des lettres séparées : extraction de texte fiable pour les ATS */
+  font-kerning: normal;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: auto;
   font-size: 9pt;
   line-height: 1.22;
   width: 210mm;
@@ -94,9 +106,12 @@
 .paper p { margin: 0; }
 .paper .pHeadline { text-align: center; font-weight: 700; font-size: 10pt; }
 .paper .pContact, .paper .pAvail { text-align: center; }
+.paper .pContact span { white-space: nowrap; } /* un contact n'est jamais coupé, et jamais de « | » orphelin */
 .paper .pAvail { font-style: italic; }
 .paper a { color: #111; text-decoration: underline; }
+.paper h2 { break-after: avoid; }
 .paper .pEntry { margin-top: 2.5pt; break-inside: avoid; }
+.paper li { orphans: 2; widows: 2; }
 .paper .pRow { display: flex; justify-content: space-between; gap: 12pt; font-weight: 700; }
 .paper .pPeriod { font-weight: 400; white-space: nowrap; }
 .paper .pSub { font-style: italic; }
@@ -104,20 +119,49 @@
 .paper li { margin: 0 0 1pt; }
 
 @media print {
-  @page { size: A4; margin: 0; }
-  html, body { background: #fff !important; }
-  body { background-image: none !important; }
+  /* Les marges sont portées par la page (et non par .paper) : une 2e page garde les mêmes marges que la 1re. */
+  @page { size: A4; margin: 10mm 13mm; }
+  /* Le fond sombre du site ne doit jamais atteindre la page (marges comprises). */
+  :root { color-scheme: light !important; background: #fff !important; }
+  html, body { background: #fff !important; background-image: none !important; color: #111; }
   .cvTool { display: block; padding: 0; max-width: none; }
   .cvTool .panel { display: none !important; }
   .cvTool .stage { overflow: visible; }
-  .paper { box-shadow: none; width: 210mm; min-height: 0; margin: 0; }
+  .paper { box-shadow: none; width: auto; max-width: none; min-height: 0; margin: 0; padding: 0; }
+  .paper, .paper * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 
 .cvTool .fileBtn { font-family: var(--font-mono); font-size: 11.5px; color: var(--text-faint); text-decoration: underline; cursor: pointer; }
 .cvTool .fileBtn:hover { color: var(--accent); }
 .cvTool .ok { margin: 0 0 8px; padding: 8px 10px; border-left: 2px solid var(--accent); background: var(--accent-soft); font-size: 14.5px; }
 .cvTool .warn ul { margin: 6px 0 0; padding-left: 18px; }
-.cvTool .advice { white-space: pre-wrap; font-size: 15px; line-height: 1.5; border: 1px solid var(--line-soft); border-radius: 3px; padding: 12px; max-height: 420px; overflow: auto; }
+/* Texte rendu depuis du Markdown (conseils, lettre) */
+.cvTool .md { font-size: 15px; line-height: 1.55; overflow-wrap: anywhere; }
+.cvTool .cvTool .md > :first-child { margin-top: 0; }
+.cvTool .cvTool .md > :last-child { margin-bottom: 0; }
+.cvTool .md h2, .cvTool .md h3, .cvTool .md h4 { font-family: var(--font-mono); font-weight: 500; color: var(--accent); line-height: 1.3; margin: 20px 0 8px; }
+.cvTool .md h2 { font-size: 14px; padding-bottom: 6px; border-bottom: 1px solid var(--line-soft); }
+.cvTool .md h3 { font-size: 13px; }
+.cvTool .cvTool .md h4, .cvTool .md h5, .cvTool .md h6 { font-size: 12px; color: var(--text-muted); }
+.cvTool .md p { margin: 0 0 10px; }
+.cvTool .cvTool .md ul, .cvTool .md ol { margin: 0 0 10px; padding-left: 20px; display: flex; flex-direction: column; gap: 5px; }
+.cvTool .md li::marker { color: var(--accent); font-family: var(--font-mono); font-size: 12px; }
+.cvTool .cvTool .md li > ul, .cvTool .md li > ol { margin: 5px 0 0; }
+.cvTool .md strong { font-weight: 600; color: var(--text); }
+.cvTool .md em { font-style: italic; }
+.cvTool .md a { color: var(--accent); }
+.cvTool .md code { font-family: var(--font-mono); font-size: 12.5px; background: var(--bg-raised); border: 1px solid var(--line-soft); border-radius: 3px; padding: 1px 5px; }
+.cvTool .md pre { background: var(--bg-raised); border: 1px solid var(--line-soft); border-radius: 3px; padding: 10px 12px; overflow-x: auto; margin: 0 0 10px; }
+.cvTool .md pre code { background: none; border: 0; padding: 0; }
+.cvTool .md blockquote { margin: 0 0 10px; padding: 2px 0 2px 12px; border-left: 2px solid var(--accent-dim); color: var(--text-muted); }
+.cvTool .md hr { border: 0; border-top: 1px solid var(--line-soft); margin: 16px 0; }
+.cvTool .md .mdTable { overflow-x: auto; margin: 0 0 10px; }
+.cvTool .md table { border-collapse: collapse; font-size: 13.5px; }
+.cvTool .cvTool .md th, .cvTool .md td { border: 1px solid var(--line-soft); padding: 5px 9px; text-align: left; vertical-align: top; }
+.cvTool .md th { font-family: var(--font-mono); font-weight: 500; font-size: 12px; color: var(--text-muted); }
+
+.cvTool .adviceBox { display: flex; flex-direction: column; gap: 12px; }
+.cvTool .advice { border: 1px solid var(--line-soft); border-radius: 3px; padding: 14px 16px; }
 .cvTool .ai { border-top: 1px solid var(--line); padding-top: 16px; }
 
 .cvTool .unlock input { background: var(--bg-raised); border: 1px solid var(--line); border-radius: 3px; color: var(--text); font-family: var(--font-mono); font-size: 13px; padding: 8px 10px; }

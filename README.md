@@ -34,6 +34,9 @@ Push sur `main` : le workflow `.github/workflows/deploy.yml` construit et publie
 | `lib/tailor.ts` | Analyse de l'offre, scoring, sélection des projets/puces |
 | `lib/taxonomy.ts` | Compétences reconnues (FR/EN) |
 | `lib/docxExport.ts` | Export DOCX compatible ATS |
+| `app/cv/letter/`, `lib/letter.ts`, `lib/slop.ts`, `lib/letterDocx.ts` | Lettre de motivation « sans cliché » : prompt, détecteur de formules génériques, export DOCX |
+| `lib/markdown.tsx`, `lib/clipboard.ts` | Rendu Markdown des réponses de l'IA et copie (mise en forme ou Markdown) |
+| `app/cv/fonts/` | Police du CV embarquée (Liberation Sans, métrique Arial) : PDF identique partout |
 | `lib/ai.ts`, `lib/providers.ts`, `lib/guard.ts` | Assistant IA multi-fournisseurs avec bascule, garde-fou anti-invention |
 | `lib/vault.ts` | Coffre chiffré (jeton et clés), déverrouillé en mémoire |
 | `lib/github.ts`, `lib/owner.ts` | Publication par commit et mode propriétaire |

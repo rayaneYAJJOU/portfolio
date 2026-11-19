@@ -64,6 +64,7 @@
         "label": "Développement & Modélisation",
         "items": [
           "React",
+          "API REST",
           "Streamlit",
           "PyQt5",
           "Git",
@@ -458,6 +459,7 @@
         "items": [
           "React",
           "Streamlit",
+          "REST API",
           "PyQt5",
           "Git",
           "GitHub Actions (CI/CD)",

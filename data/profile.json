@@ -83,7 +83,7 @@
       },
       {
         "lang": "Anglais",
-        "level": "Bilingue, TOEIC B2, Score: 985"
+        "level": "Bilingue, TOEIC B2 Score 985"
       },
       {
         "lang": "Arabe",
@@ -176,7 +176,9 @@
             "Cybersécurité",
             "Python",
             "R",
-            "Docker"
+            "Docker",
+            "Science des données",
+            "NLP"
           ]
         },
         {
@@ -565,7 +567,9 @@
             "Cybersecurity",
             "Python",
             "R",
-            "Docker"
+            "Docker",
+            "Data Science",
+            "NLP"
           ]
         },
         {

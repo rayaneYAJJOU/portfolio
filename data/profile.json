@@ -35,7 +35,9 @@
           "Python",
           "Lua",
           "C",
+          "Java",
           "SQL",
+          "JavaScript",
           "TypeScript",
           "R",
           "Bash"
@@ -426,7 +428,9 @@
           "Python",
           "Lua",
           "C",
+          "Java",
           "SQL",
+          "JavaScript",
           "TypeScript",
           "R",
           "Bash"

@@ -35,6 +35,8 @@ Push sur `main` : le workflow `.github/workflows/deploy.yml` construit et publie
 | `lib/taxonomy.ts` | Compétences reconnues (FR/EN) |
 | `lib/docxExport.ts` | Export DOCX compatible ATS |
 | `app/cv/letter/`, `lib/letter.ts`, `lib/slop.ts`, `lib/letterDocx.ts` | Lettre de motivation « sans cliché » : prompt, détecteur de formules génériques, export DOCX |
+| `app/cv/prompts/`, `lib/prompts.ts` | Tous les prompts des IA, modifiables avec valeur par défaut, variables, consignes perso, export/import |
+| `app/cv/suivi/`, `lib/offers.ts` | Suivi des candidatures : statuts, relances à J+7, notes, export CSV |
 | `lib/markdown.tsx`, `lib/clipboard.ts` | Rendu Markdown des réponses de l'IA et copie (mise en forme ou Markdown) |
 | `app/cv/fonts/` | Police du CV embarquée (Liberation Sans, métrique Arial) : PDF identique partout |
 | `lib/ai.ts`, `lib/providers.ts`, `lib/guard.ts` | Assistant IA multi-fournisseurs avec bascule, garde-fou anti-invention |

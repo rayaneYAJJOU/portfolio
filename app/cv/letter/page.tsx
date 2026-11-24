@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { useHydrated } from "../../../lib/clientEnv";
+import { useHash, useHydrated } from "../../../lib/clientEnv";
 import { copyPlain } from "../../../lib/clipboard";
-import { extractStyle, letterPrompt, repairLetter, reviewLetter, writeLetter, type LetterInput } from "../../../lib/letter";
+import { extractStyle, KINDS, letterPrompt, repairLetter, reviewLetter, writeLetter, type Kind, type LetterInput } from "../../../lib/letter";
 import { KEYS, useLocal, useProfile, writeStore } from "../../../lib/owner";
 import { parseJson } from "../../../lib/store";
 import { META, useAiStatus, useNow } from "../../../lib/providers";
@@ -32,14 +32,18 @@ export default function LetterPage() {
   const styleRaw = useLocal(KEYS.style);
   const style = useMemo(() => parseJson<Style>(styleRaw) ?? {}, [styleRaw]);
   const draftRaw = useLocal(KEYS.letter);
-  const draft = useMemo(() => parseJson<{ text?: string }>(draftRaw) ?? {}, [draftRaw]);
+  const draft = useMemo(() => parseJson<{ text?: string; texts?: Partial<Record<Kind, string>> }>(draftRaw) ?? {}, [draftRaw]);
+  const hash = useHash().slice(1);
+  const [kindEdit, setKind] = useState<Kind | null>(null);
+  const kind: Kind = kindEdit ?? (hash in KINDS ? (hash as Kind) : "letter"); // #followup, #mail… ouvre directement le bon type
+  const K = KINDS[kind];
 
   const [langEdit, setLang] = useState<Lang | null>(null);
   const [roleEdit, setRole] = useState<string | null>(null);
   const [companyEdit, setCompany] = useState<string | null>(null);
   const [why, setWhy] = useState("");
   const [emphasis, setEmphasis] = useState("");
-  const [textEdit, setTextEdit] = useState<string | null>(null);
+  const [textEdits, setTextEdits] = useState<Partial<Record<Kind, string>>>({});
   const [samplesEdit, setSamplesEdit] = useState<string | null>(null);
   const [guideEdit, setGuideEdit] = useState<string | null>(null);
   const [busy, setBusy] = useState<"" | "write" | "repair" | "style" | "docx">("");
@@ -53,11 +57,12 @@ export default function LetterPage() {
   const company = companyEdit ?? cv.company ?? "";
   const samples = samplesEdit ?? style.samples ?? "";
   const guide = guideEdit ?? style.guide ?? "";
-  const text = textEdit ?? draft.text ?? "";
+  // un brouillon par type de texte ; l'ancien format (lettre seule) est repris tel quel
+  const text = textEdits[kind] ?? draft.texts?.[kind] ?? (kind === "letter" ? draft.text : "") ?? "";
 
   const { report } = tailor({ lang, jd, targetRole: role, company, data, maxProjects: 3 });
   const input: LetterInput = {
-    lang, jd, role, company, data, why, emphasis, styleGuide: guide, samples,
+    kind, lang, jd, role, company, data, why, emphasis, styleGuide: guide, samples,
     matched: report.matched.map((t) => t.label),
     missing: report.missing.map((t) => t.label),
   };
@@ -65,7 +70,11 @@ export default function LetterPage() {
   const wordCount = (text.match(/[\p{L}\p{N}'’-]+/gu) ?? []).length;
 
   const hasAi = !!owner && Object.values(owner.keys).some(Boolean);
-  const saveText = (v: string) => { setTextEdit(v); writeStore(KEYS.letter, JSON.stringify({ text: v })); };
+  const saveText = (v: string) => {
+    setTextEdits((prev) => ({ ...prev, [kind]: v }));
+    const prior = draft.texts ?? (draft.text ? { letter: draft.text } : {});
+    writeStore(KEYS.letter, JSON.stringify({ texts: { ...prior, [kind]: v } }));
+  };
   const saveStyle = (next: Style) => writeStore(KEYS.style, JSON.stringify({ samples, guide, ...next }));
 
   const run = async (kind: "write" | "repair" | "style", job: () => Promise<void>) => {
@@ -132,12 +141,17 @@ export default function LetterPage() {
   const paused = owner.providers.filter((c) => c.enabled && owner.keys[c.id] && (aiStatus.cool[c.id]?.until ?? 0) > now);
 
   return (
-    <div className="cvTool letterTool">
+    <div className="cvTool letterTool" onKeyDown={(e) => { if ((e.ctrlKey || e.metaKey) && e.key === "Enter" && hasAi && jd.trim() && !busy) { e.preventDefault(); generate(); } }}>
       <aside className="panel">
         <Link href="/cv/" className="back">← CV adapté à une offre</Link>
-        <h1>Lettre de motivation</h1>
+        <h1>Candidature : textes</h1>
+        <div className="kindTabs" role="tablist" aria-label="Type de texte">
+          {(Object.keys(KINDS) as Kind[]).map((k) => (
+            <button key={k} role="tab" aria-selected={kind === k} data-active={kind === k} onClick={() => { setKind(k); setNote(""); setError(""); }}>{KINDS[k].label}</button>
+          ))}
+        </div>
         <p className="hint">
-          Écrite à partir de ton profil réel et de l&apos;offre, avec une liste d&apos;interdits (formules toutes faites, enthousiasme inventé) et un détecteur qui relit le résultat. Plus ton style est renseigné, plus le texte sonne comme toi.
+          Écrit à partir de ton profil réel et de l&apos;offre, avec une liste d&apos;interdits (formules toutes faites, enthousiasme inventé) et un détecteur qui relit le résultat. Plus ton style est renseigné, plus le texte sonne comme toi. <Link href={`/cv/prompts/#${kind}`}>Modifier le prompt de ce texte</Link>.
         </p>
 
         {!jd.trim() ? (
@@ -188,7 +202,7 @@ export default function LetterPage() {
         </details>
 
         <div className="actions">
-          <button className="cta" onClick={generate} disabled={!hasAi || !jd.trim() || !!busy}>{busy === "write" ? "Rédaction…" : text.trim() ? "Régénérer" : "Générer la lettre"}</button>
+          <button className="cta" onClick={generate} disabled={!hasAi || !jd.trim() || !!busy}>{busy === "write" ? "Rédaction…" : text.trim() ? "Régénérer" : `Générer : ${K.label.toLowerCase()}`}</button>
           <CopyButton label="Copier le prompt (sans clé API)" onCopy={() => copyPlain(letterPrompt(input))} disabled={!jd.trim()} />
         </div>
         {!hasAi ? <p className="hint small">Pas de clé d&apos;IA : copie le prompt et colle-le dans Claude ou ChatGPT, puis colle la réponse à droite. Le contrôle fonctionne aussi sur un texte collé.</p> : (
@@ -203,10 +217,10 @@ export default function LetterPage() {
 
       <main className="stage letterStage">
         <div className="letterHead">
-          <h2>Lettre {text.trim() ? `· ${wordCount} mots` : ""}</h2>
+          <h2>{K.label} {text.trim() ? `· ${wordCount} mots (cible ${K.words[0]} à ${K.words[1]})` : ""}</h2>
           <div className="actions">
             <CopyButton label="Copier" onCopy={() => copyPlain(text)} disabled={!text.trim()} />
-            <button className="cta ghost" onClick={downloadDocx} disabled={!text.trim() || busy === "docx"}>DOCX</button>
+            {K.docx ? <button className="cta ghost" onClick={downloadDocx} disabled={!text.trim() || busy === "docx"}>DOCX</button> : null}
             <button className="cta ghost" onClick={fix} disabled={!hasAi || !review.slop.length || !!busy}>{busy === "repair" ? "Correction…" : "Corriger les tournures"}</button>
           </div>
         </div>
@@ -215,7 +229,7 @@ export default function LetterPage() {
           className="letterText"
           value={text}
           onChange={(e) => saveText(e.target.value)}
-          placeholder="La lettre apparaît ici. Tu peux la modifier : le contrôle ci-dessous se met à jour à chaque frappe."
+          placeholder="Le texte apparaît ici. Tu peux le modifier : le contrôle ci-dessous se met à jour à chaque frappe (Ctrl+Entrée pour générer)."
           spellCheck
           lang={lang}
         />

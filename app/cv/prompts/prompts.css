@@ -1,0 +1,11 @@
+.promptsTool { display: block; }
+.promptsTool .promptsMain { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+.promptsTool h2 { font-family: var(--font-mono); font-weight: 500; font-size: 14px; color: var(--accent); margin: 0; }
+.promptsTool .pGroup { display: flex; flex-direction: column; gap: 10px; }
+.promptsTool .pCard { border: 1px solid var(--line-soft); border-radius: 3px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; background: var(--bg-raised); }
+.promptsTool details.pCard > summary { cursor: pointer; display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 13px; color: var(--text); }
+.promptsTool .badge { font-size: 11px; color: var(--bg); background: var(--accent); border-radius: 3px; padding: 1px 6px; }
+.promptsTool textarea { width: 100%; font-family: var(--font-mono); font-size: 12.5px; line-height: 1.55; resize: vertical; }
+.promptsTool .vars { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.promptsTool .vars code { color: var(--accent); }
+.promptsTool .pPreview { white-space: pre-wrap; font-family: var(--font-mono); font-size: 12px; line-height: 1.5; background: var(--bg); border: 1px solid var(--line-soft); border-radius: 3px; padding: 12px; max-height: 420px; overflow: auto; margin: 0; }

@@ -20,3 +20,6 @@
 .letterTool .checks .warn, .letterTool .checks .ok { margin: 0; }
 .letterTool .hint a { color: var(--accent); }
 .letterTool details > * + * { margin-top: 10px; }
+.letterTool .kindTabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.letterTool .kindTabs button { font-family: var(--font-mono); font-size: 12px; padding: 6px 10px; border: 1px solid var(--line); background: transparent; color: var(--text-muted); border-radius: 3px; cursor: pointer; }
+.letterTool .kindTabs button[data-active="true"] { color: var(--bg); background: var(--accent); border-color: var(--accent); }

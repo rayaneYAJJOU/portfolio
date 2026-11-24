@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useHash, useHydrated, useSearch } from "../../lib/clientEnv";
 import { KEYS, notify, useLocal, useProfile, writeStore } from "../../lib/owner";
-import { aiAdvise, aiExtractOffer, aiRewrite, type OfferMemo } from "../../lib/ai";
+import { aiAdvise, aiExtractOffer, aiInterview, aiRewrite, type OfferMemo } from "../../lib/ai";
+import { needsFollowUp, parseOffers, ymd, type SavedOffer } from "../../lib/offers";
 import { checkRewrite } from "../../lib/guard";
 import { META, useAiStatus, useNow } from "../../lib/providers";
 import { useVault } from "../../lib/vault";
@@ -21,8 +22,6 @@ import "./cv.css";
 
 const STORE = KEYS.cv;
 const OFFERS = KEYS.offers;
-
-type SavedOffer = { id: string; date: string; label: string; coverage: number | null; missing: { key: string; weight: number }[]; text?: string; url?: string };
 
 // Import depuis le favori : #import=<base64url(JSON {x: texte, t: titre, u: url})>
 function decodeImport(hash: string): { x: string; t?: string; u?: string } | null {
@@ -143,7 +142,7 @@ export default function CvPage() {
   const [busy, setBusy] = useState(false);
   const [copiedPrompt, setCopiedPrompt] = useState(false);
   const [overrides, setOverrides] = useState<Record<string, string[]> | undefined>(undefined);
-  const [aiBusy, setAiBusy] = useState<"" | "rewrite" | "advise" | "image">("");
+  const [aiBusy, setAiBusy] = useState<"" | "rewrite" | "advise" | "interview" | "image">("");
   const [aiError, setAiError] = useState("");
   const [aiNotes, setAiNotes] = useState("");
   const [aiIssues, setAiIssues] = useState<string[]>([]);
@@ -154,6 +153,7 @@ export default function CvPage() {
   const now = useNow();
   const hydrated = useHydrated();
   const advice = useLocal(KEYS.advice);
+  const interview = useLocal(KEYS.interview);
 
   const q = useMemo(() => new URLSearchParams(search), [search]);
   const viewOnly = q.has("view") || !owner; // les visiteurs n'ont que la vue lecture
@@ -197,9 +197,8 @@ export default function CvPage() {
   const { cv, report } = useMemo(() => tailor({ ...base, maxProjects }), [base, maxProjects]);
 
   const offersRaw = useLocal(OFFERS);
-  const offers = useMemo<SavedOffer[]>(() => {
-    try { return JSON.parse(offersRaw || "[]"); } catch { return []; }
-  }, [offersRaw]);
+  const offers = useMemo<SavedOffer[]>(() => parseOffers(offersRaw), [offersRaw]);
+  const dueCount = offers.filter((o) => needsFollowUp(o, ymd(new Date(now)))).length;
 
   // Radar : écarts agrégés sur toutes les offres enregistrées (ce qui revient le plus = ce qu'il faut apprendre).
   const radar = useMemo(() => {
@@ -216,9 +215,19 @@ export default function CvPage() {
   };
   const saveOffer = () => {
     const label = [company, effRole].filter(Boolean).join(" – ") || firstLine.slice(0, 60) || "Offre";
+    const prev = offers.find((o) => o.label === label); // ré-enregistrer met l'offre à jour sans perdre le suivi (statut, relance, notes)
     writeOffers([
       ...offers.filter((o) => o.label !== label),
-      { id: String(Date.now()), date: new Date().toISOString().slice(0, 10), label, coverage: report.coverage, missing: report.missing.map((t) => ({ key: t.key, weight: t.weight })), text: jd.slice(0, 4000), url: source },
+      {
+        ...prev,
+        id: prev?.id ?? String(Date.now()),
+        date: prev?.date ?? ymd(new Date()),
+        label, company, role: effRole,
+        coverage: report.coverage,
+        missing: report.missing.map((t) => ({ key: t.key, weight: t.weight })),
+        text: jd.slice(0, 4000), url: source,
+        status: prev?.status ?? "todo",
+      },
     ]);
   };
 
@@ -265,7 +274,7 @@ export default function CvPage() {
     } catch {}
   };
 
-  const runAi = async (kind: "rewrite" | "advise" | "image", job: () => Promise<void>) => {
+  const runAi = async (kind: "rewrite" | "advise" | "interview" | "image", job: () => Promise<void>) => {
     setAiBusy(kind);
     setAiError("");
     try { await job(); } catch (e) { setAiError(e instanceof Error ? e.message : String(e)); } finally { setAiBusy(""); }
@@ -294,6 +303,11 @@ export default function CvPage() {
     owner && runAi("advise", async () => {
       const memos: OfferMemo[] = offers.map((o) => ({ label: o.label, date: o.date, missing: o.missing, text: o.text, url: o.url }));
       writeStore(KEYS.advice, await aiAdvise(owner, data, memos, (k) => labelFor(k, "fr")));
+    });
+
+  const doInterview = () =>
+    owner && runAi("interview", async () => {
+      writeStore(KEYS.interview, await aiInterview(owner, data, cv, jd, report));
     });
 
   const doImage = (file: File) =>
@@ -420,7 +434,11 @@ export default function CvPage() {
             <button className="cta ghost" onClick={doRewrite} disabled={!hasAi || !jd.trim() || !!aiBusy}>{aiBusy === "rewrite" ? "Réécriture…" : "Reformuler pour cette offre"}</button>
             {overrides ? <button className="cta ghost" onClick={undoRewrite}>Annuler la réécriture</button> : null}
             <button className="cta ghost" onClick={doAdvise} disabled={!hasAi || !!aiBusy}>{aiBusy === "advise" ? "Analyse…" : "Que dois-je améliorer ?"}</button>
+            <button className="cta ghost" onClick={doInterview} disabled={!hasAi || !jd.trim() || !!aiBusy}>{aiBusy === "interview" ? "Préparation…" : "Préparer l'entretien"}</button>
           </div>
+          <p className="hint small">
+            <Link href="/cv/suivi/">Suivi des candidatures{dueCount ? ` · ${dueCount} à relancer` : ""}</Link> · <Link href="/cv/prompts/">Modifier les prompts</Link>
+          </p>
           {aiError ? <p className="warn">{aiError}</p> : null}
           {aiNotes ? <p className="hint small">{aiNotes}</p> : null}
           {aiIssues.length ? (
@@ -430,6 +448,7 @@ export default function CvPage() {
             </div>
           ) : overrides ? <p className="ok">Contrôle : aucun outil ni chiffre ajouté par rapport à ton profil.</p> : null}
           {advice ? <AdviceView text={advice} onClear={() => writeStore(KEYS.advice, null)} /> : null}
+          {interview ? <AdviceView title="Préparation d'entretien" text={interview} onClear={() => writeStore(KEYS.interview, null)} /> : null}
         </section>
 
         <section className="report" aria-live="polite">
@@ -486,7 +505,7 @@ export default function CvPage() {
                 ))}
               </ol>
               <p className="hint small">Les enregistrements restent dans ce navigateur uniquement.</p>
-              <button className="cta ghost" onClick={() => writeOffers([])}>Effacer le radar</button>
+              <button className="cta ghost" onClick={() => { if (window.confirm("Effacer toutes les offres enregistrées ? Cela supprime aussi le suivi des candidatures (statuts, relances, notes).")) writeOffers([]); }}>Effacer les offres</button>
             </>
           )}
         </section>

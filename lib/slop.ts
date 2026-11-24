@@ -38,7 +38,9 @@ const sentences = (t: string) => t.split(/(?<=[.!?…])\s+|\n+/).map((s) => s.tr
 const words = (t: string) => (t.match(/[\p{L}\p{N}'’-]+/gu) ?? []).length;
 
 /** Cherche les tournures génériques et les tics de texte généré. Renvoie une liste vide si le texte est propre. */
-export function findSlop(text: string, lang: Lang): SlopIssue[] {
+export type LengthRule = { min: number; max: number; target: [number, number] };
+
+export function findSlop(text: string, lang: Lang, len: LengthRule = { min: 150, max: 380, target: [200, 320] }): SlopIssue[] {
   const issues: SlopIssue[] = [];
   const n = norm(text);
 
@@ -69,7 +71,7 @@ export function findSlop(text: string, lang: Lang): SlopIssue[] {
   }
 
   const w = words(text);
-  if (w && (w < 150 || w > 380)) issues.push({ kind: "structure", message: `Longueur : ${w} mots. Vise 200 à 320 mots (une page).` });
+  if (w && (w < len.min || w > len.max)) issues.push({ kind: "structure", message: `Longueur : ${w} mots. Vise ${len.target[0]} à ${len.target[1]} mots.` });
   return issues;
 }
 

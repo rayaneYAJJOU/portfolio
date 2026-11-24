@@ -11,6 +11,8 @@ export const KEYS = {
   advice: "advice:v1",
   style: "letter:style:v1", // tes textes de référence + guide de style (non secrets, en clair)
   letter: "letter:draft:v1", // dernier brouillon de lettre
+  prompts: "prompts:v1", // prompts personnalisés + consignes perso (non secrets, en clair)
+  interview: "interview:v1", // dernière préparation d'entretien
   ai: "ai:status:v1",
 } as const;
 

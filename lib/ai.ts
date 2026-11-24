@@ -1,5 +1,6 @@
 import { cvToText } from "./cvText";
 import type { Data, Owner } from "./owner";
+import { promptText } from "./prompts";
 import { ask, type Req } from "./providers";
 import type { CV, Report } from "./tailor";
 
@@ -7,8 +8,6 @@ import type { CV, Report } from "./tailor";
 // Les clés ne sont jamais dans le code : elles sont déverrouillées en mémoire par ta phrase secrète.
 
 const run = async (o: Owner, r: Req) => (await ask(o, r)).text;
-
-const RULES = `Règles impératives : n'invente AUCUN outil, résultat, chiffre, durée, responsabilité ni compétence. Tout doit être défendable en entretien technique. Si un chiffre améliorerait une phrase mais n'est pas fourni, écris [À COMPLÉTER : quel chiffre] au lieu de l'inventer.`;
 
 function json<T>(text: string): T {
   const m = text.match(/\{[\s\S]*\}/);
@@ -23,11 +22,9 @@ export type Rewrite = { summary: string; bullets: Record<string, string[]>; note
 export async function aiRewrite(o: Owner, cv: CV, jd: string, report: Report): Promise<Rewrite> {
   const entries = [...cv.experience, ...cv.projects, ...cv.extra].map((e) => ({ id: e.id, titre: e.heading, puces: e.bullets }));
   const out = await run(o, {
-    system: `Tu es un conseiller en recrutement pour étudiants ingénieurs. ${RULES} Réponds uniquement par un objet JSON, sans texte autour.`,
+    system: `${promptText("rewrite", { langue: cv.lang === "fr" ? "français" : "anglais" })}\nRéponds uniquement par un objet JSON, sans texte autour.`,
     maxTokens: 2500,
-    text: `Langue de sortie : ${cv.lang === "fr" ? "français" : "anglais"}.
-Reformule pour cette offre : (1) le résumé (3 phrases max), (2) les puces de chaque entrée (même nombre ou moins, même ordre, verbe d'action + contexte + résultat, vocabulaire de l'offre quand il est vrai pour moi).
-Format : {"summary": "...", "bullets": {"<id>": ["...", "..."]}, "notes": "ce que tu as changé et pourquoi, 3 lignes max"}
+    text: `Format : {"summary": "...", "bullets": {"<id>": ["...", "..."]}, "notes": "ce que tu as changé et pourquoi, 3 lignes max"}
 
 OFFRE :
 ${jd}
@@ -60,17 +57,35 @@ export async function aiAdvise(o: Owner, data: Data, offers: OfferMemo[], labelO
   }));
   return run(o, {
     maxTokens: 3000,
-    system: `Tu es un mentor de carrière pour un étudiant ingénieur (ML/data/logiciel) qui cherche un stage de fin d'études. ${RULES} Sois concret, priorise, et pose des questions précises quand il manque un fait. Réponds en français, en Markdown simple (titres ##, listes).`,
+    system: promptText("advise"),
     text: `Voici mon profil actuel et les offres que j'ai enregistrées avec leurs écarts.
-Produis :
-## Points forts à mettre en avant
-## Faiblesses concrètes du profil/CV (par entrée : ce qui manque, et la question précise à laquelle je dois répondre pour le corriger, ex. volume de données, métrique, comparaison)
-## Plan d'apprentissage priorisé d'après les offres (ordre, mini-projet de 1-2 semaines par item, comment le formuler honnêtement sur le CV)
-## Améliorations du portfolio et du GitHub (README des projets, démos, liens manquants)
-## Actions de cette semaine (5 maximum)
 
 PROFIL : ${JSON.stringify(compact)}
 OFFRES ENREGISTRÉES (${memos.length}) : ${JSON.stringify(memos)}`,
+  });
+}
+
+// ───────── 2 bis. Préparer l'entretien ─────────
+
+export async function aiInterview(o: Owner, data: Data, cv: CV, jd: string, report: Report): Promise<string> {
+  const p = data[cv.lang];
+  const compact = {
+    competences: p.skillGroups,
+    entrees: [...p.experience.items, ...p.projects.items, ...p.education.items, ...p.extra.items].map((e) => ({ titre: e.title, role: e.role, periode: e.period, puces: e.bullets, outils: e.skills })),
+  };
+  return run(o, {
+    maxTokens: 3500,
+    system: promptText("interview", { langue: cv.lang === "fr" ? "français" : "anglais" }),
+    text: `OFFRE :
+${jd.trim() || "(non fournie)"}
+
+ÉCARTS (demandés par l'offre, absents de mon profil) : ${report.missing.map((t) => t.label).join(", ") || "aucun"}
+ATOUTS COUVERTS : ${report.matched.map((t) => t.label).join(", ") || "aucun"}
+
+PROFIL (seule source de faits) : ${JSON.stringify(compact)}
+
+MON CV ADAPTÉ À CETTE OFFRE :
+${cvToText(cv)}`,
   });
 }
 
@@ -78,7 +93,7 @@ OFFRES ENREGISTRÉES (${memos.length}) : ${JSON.stringify(memos)}`,
 
 export async function aiExtractOffer(o: Owner, mediaType: string, base64: string): Promise<string> {
   return run(o, {
-    system: "Tu transcris fidèlement des offres d'emploi ou de stage à partir d'images. Réponds uniquement par le texte de l'offre (titre, entreprise, missions, profil, avantages), sans commentaire.",
+    system: promptText("offer"),
     text: "Transcris le texte complet de l'offre visible sur cette image.",
     image: { mediaType, data: base64 },
     maxTokens: 2500,

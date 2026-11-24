@@ -1,0 +1,19 @@
+.trackerTool { display: block; }
+.trackerTool .trackerMain { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+.trackerTool h2 { font-family: var(--font-mono); font-weight: 500; font-size: 14px; color: var(--accent); margin: 0; }
+.trackerTool .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.trackerTool .chips button { font-family: var(--font-mono); font-size: 12px; padding: 5px 10px; border: 1px solid var(--line); background: transparent; color: var(--text-muted); border-radius: 3px; cursor: pointer; }
+.trackerTool .chips button[data-active="true"] { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+.trackerTool .chips button[data-due] { border-color: var(--accent); color: var(--accent); }
+.trackerTool .chips button[data-due][data-active="true"] { color: var(--bg); }
+.trackerTool .tCard { border: 1px solid var(--line-soft); border-radius: 3px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; background: var(--bg-raised); }
+.trackerTool .tCard[data-due] { border-color: var(--accent); }
+.trackerTool .tCard header { display: flex; flex-direction: column; gap: 2px; }
+.trackerTool .tCard h3 { margin: 0; font-size: 16px; font-weight: 600; }
+.trackerTool .tCard h3 span { font-weight: 400; color: var(--text-muted); }
+.trackerTool .dueTag { color: var(--accent); }
+.trackerTool .trow { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.trackerTool .fieldRow { display: flex; gap: 10px; flex-wrap: wrap; }
+.trackerTool .fieldRow input { flex: 1 1 200px; }
+.trackerTool textarea { width: 100%; resize: vertical; }
+.trackerTool input[type="date"] { color-scheme: dark; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 3px; padding: 8px 10px; font-family: var(--font-mono); font-size: 13px; }

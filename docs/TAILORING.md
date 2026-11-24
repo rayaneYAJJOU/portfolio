@@ -102,3 +102,27 @@ Bouton « Lettre de motivation → » dans `/cv/` : la page reprend l'offre, l'e
   correction automatique est lancée si besoin ; le contrôle se met à jour pendant que tu retouches le texte.
 - **Sans clé d'API** : « Copier le prompt » donne un prompt complet pour Claude ou ChatGPT ; colle la réponse dans la page pour la faire contrôler.
 - Export : copier, ou DOCX (bloc expéditeur, date, destinataire). Pour ajouter une formule à bannir : une ligne dans `lib/slop.ts`.
+
+## Prompts modifiables (`/cv/prompts/`)
+
+Chaque consigne envoyée aux IA (lettre, e-mail, relance, LinkedIn, style, reformulation, conseils, entretien, prompt à coller) est éditable.
+
+- **Valeur par défaut** : « Rétablir le défaut » par prompt, « Tout rétablir » pour tout. Seules les différences sont enregistrées : un prompt non modifié suit les améliorations futures du code.
+- **Variables** `{{langue}}`, `{{mots}}`, `{{interdits}}`, `{{faits}}`, `{{regles}}`… : remplacées à l'envoi. Si tu en retires une, un avertissement l'indique.
+- **Consignes personnelles** : un champ ajouté à la fin de tous les prompts (ex. « tutoie-moi », « ne cite jamais mes notes »).
+- **Aperçu** : « Voir le prompt final » montre le texte exact envoyé. Le site ajoute toujours lui-même les données, l'offre et le format de réponse (JSON pour la reformulation) : non modifiable, le code en dépend.
+- **Sauvegarde** : dans ce navigateur ; « Exporter (JSON) » / « Importer… » pour les garder ou les changer d'appareil.
+- Le détecteur de clichés, le garde-fou outils/chiffres et la liste d'interdits (`lib/slop.ts`) restent actifs même avec un prompt modifié.
+
+## Suivi des candidatures (`/cv/suivi/`)
+
+- « Enregistrer cette offre » (outil CV) crée la fiche ; ré-enregistrer la même offre la met à jour sans perdre statut, dates ni notes.
+- Statuts : À postuler, Envoyée, Entretien, Proposition, Refus, Abandonnée. Passer à « Envoyée » renseigne la date du jour et propose une relance à J+7.
+- Les candidatures à relancer remontent en tête, avec un compteur dans l'outil CV.
+- « Reprendre dans l'outil CV » rouvre l'offre ; « Écrire la relance » ouvre la page de rédaction sur le type Relance.
+- Export CSV compatible Excel. « Effacer les offres » (outil CV) supprime aussi le suivi : une confirmation est demandée.
+
+## Autres textes et préparation d'entretien
+
+- La page `/cv/letter/` écrit aussi l'**e-mail de candidature**, la **relance** et le **message LinkedIn**, avec le même style, les mêmes garde-fous et une longueur cible propre à chaque type. Un brouillon est conservé par type. Ctrl+Entrée génère.
+- **Préparer l'entretien** (outil CV) : questions techniques et comportementales probables, réponses ancrées dans ton profil, écarts à assumer, questions à poser.

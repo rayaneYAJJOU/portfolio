@@ -35,7 +35,9 @@
           "Python",
           "Lua",
           "C",
+          "Java",
           "SQL",
+          "JavaScript",
           "TypeScript",
           "R",
           "Bash"
@@ -62,6 +64,7 @@
         "label": "Développement & Modélisation",
         "items": [
           "React",
+          "API REST",
           "Streamlit",
           "PyQt5",
           "Git",
@@ -424,7 +427,9 @@
           "Python",
           "Lua",
           "C",
+          "Java",
           "SQL",
+          "JavaScript",
           "TypeScript",
           "R",
           "Bash"
@@ -452,6 +457,7 @@
         "items": [
           "React",
           "Streamlit",
+          "REST API",
           "PyQt5",
           "Git",
           "GitHub Actions (CI/CD)",
